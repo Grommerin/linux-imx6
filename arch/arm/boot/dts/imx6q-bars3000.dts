@@ -137,7 +137,6 @@
 			/* NOR_Vpp/Wp# ??? */
 			/* NOR_Reset# ??? */
 			/* NOR_x8/x16 ??? */
-			
 			//MX6QDL_PAD_EIM_D28__GPIO3_IO28 0x80000000
 			//MX6QDL_PAD_EIM_A25__GPIO5_IO02 0x80000000
 		>;
