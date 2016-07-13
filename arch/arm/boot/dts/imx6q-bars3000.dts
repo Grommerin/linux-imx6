@@ -101,19 +101,48 @@
 //	};
 };
 
-//&iomuxc {
-//	pinctrl-names = "default";
-//	pinctrl-0 = <&pinctrl_hog>;
+&iomuxc {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_hog>;
 
-//	hog {
-//		pinctrl_hog: hoggrp {
-//		fsl,pins = < 
-//			/* gpio-leds */
-//			MX6QDL_PAD_EIM_D28__GPIO3_IO28 0x80000000
-//			MX6QDL_PAD_EIM_A25__GPIO5_IO02 0x80000000
-//		>;
-//		};
-//	};
+	hog {
+		pinctrl_hog: hoggrp {
+		fsl,pins = < 		
+			/* Status_GPRS pin 125 */
+			MX6QDL_PAD_RGMII_RD0__GPIO6_IO25 0x80000000
+			/* Flight_Mode_GPRS */
+			MX6QDL_PAD_RGMII_RD2__GPIO6_IO28 0x80000000
+			/* LED_WiFi */
+			//MX6QDL_PAD_EIM_D17__ECSPI1_MISO
+			MX6QDL_PAD_EIM_D17__GPIO3_IO17 0x80000000
+			/* LED_Power/Work */
+			//MX6QDL_PAD_EIM_D18__ECSPI1_MOSI
+			MX6QDL_PAD_EIM_D18__GPIO3_IO18 0x80000000
+			/* LED_CAN2 */
+			//MX6QDL_PAD_EIM_D16__ECSPI1_SCLK
+			MX6QDL_PAD_EIM_D16__GPIO3_IO16 0x80000000
+			/* LED_CAN1 */
+			//MX6QDL_PAD_EIM_D19__ECSPI1_SS1
+			MX6QDL_PAD_EIM_D19__GPIO3_IO19 0x80000000
+			/* Reset_Settings */
+			MX6QDL_PAD_EIM_BCLK__GPIO6_IO31 0x80000000
+			/* Power_GPRS */
+			MX6QDL_PAD_EIM_D30__GPIO3_IO30 0x80000000
+			/* LED_GPS/GPRS */
+			MX6QDL_PAD_EIM_D31__GPIO3_IO31 0x80000000
+			/* Pow_Good */
+			MX6QDL_PAD_EIM_D25__GPIO3_IO25 0x80000000
+			/* #Reset_GPRS */
+			MX6QDL_PAD_EIM_D24__GPIO3_IO24 0x80000000
+			/* NOR_Vpp/Wp# ??? */
+			/* NOR_Reset# ??? */
+			/* NOR_x8/x16 ??? */
+			
+			//MX6QDL_PAD_EIM_D28__GPIO3_IO28 0x80000000
+			//MX6QDL_PAD_EIM_A25__GPIO5_IO02 0x80000000
+		>;
+		};
+	};
 	
 // shared on LCD port (J12), extension header (J11), and LVDS display (J3), on-board pull-ups
 // 
