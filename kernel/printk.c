@@ -2387,6 +2387,8 @@ void register_console(struct console *newcon)
 		printk(KERN_INFO "%sconsole [%s%d] enabled\n",
 			(newcon->flags & CON_BOOT) ? "boot" : "" ,
 			newcon->name, newcon->index);
+		// FIXME добавил
+		unregister_console(bcon);
 	}
 }
 EXPORT_SYMBOL(register_console);
