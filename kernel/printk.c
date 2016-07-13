@@ -2388,7 +2388,7 @@ void register_console(struct console *newcon)
 			(newcon->flags & CON_BOOT) ? "boot" : "" ,
 			newcon->name, newcon->index);
 		// FIXME добавил
-		unregister_console(bcon);
+//		unregister_console(bcon);
 	}
 }
 EXPORT_SYMBOL(register_console);
