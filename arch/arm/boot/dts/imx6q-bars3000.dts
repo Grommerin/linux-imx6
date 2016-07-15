@@ -134,13 +134,13 @@
 			   /* Reset_Settings    | pin 38  | GPIO 191 */
 			MX6QDL_PAD_EIM_BCLK__GPIO6_IO31    0x80000000        // ok
 			//
-			   /* Power_GPRS        | pin 77  | GPIO 94 */
-			MX6QDL_PAD_SD3_DAT3__GPIO7_IO07    0x80000000
+			   /* Power_GPRS        | pin 77  | GPIO 87 */
+                  MX6QDL_PAD_EIM_D23__GPIO3_IO23     0x80000000
+			// MX6QDL_PAD_SD3_DAT3__GPIO7_IO07    0x80000000        // ERRROR
 			// MX6QDL_PAD_EIM_D30__GPIO3_IO30     0x80000000        // ERRROR
 			//
-			   /* LED_GPS/GPRS      | pin 78  | GPIO 95 */
-                  MX6QDL_PAD_SD3_RST__GPIO7_IO08     0x80000000
-			// MX6QDL_PAD_EIM_D31__GPIO3_IO31     0x80000000        // ERRROR
+			   /* LED_GPS/GPRS      | pin 78  | GPIO 200 */
+                  MX6QDL_PAD_SD3_RST__GPIO7_IO08     0x80000000       // ok
 			//
 			   /* Pow_Good          | pin 72  | GPIO 89 */
 			MX6QDL_PAD_EIM_D25__GPIO3_IO25     0x80000000        // ok
