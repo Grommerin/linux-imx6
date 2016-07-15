@@ -299,6 +299,17 @@
                               clock-names = "ipg", "per";
                               status = "disabled";
                         };
+                        
+                        ecspi5: ecspi@02018000 {
+                              #address-cells = <1>;
+                              #size-cells = <0>;
+                              compatible = "fsl,imx6q-ecspi", "fsl,imx51-ecspi";
+                              reg = <0x02018000 0x4000>;
+                              interrupts = <0 35 0x04>;
+                              clocks = <&clks 116>, <&clks 116>;
+                              clock-names = "ipg", "per";
+                              status = "disabled";
+                        };
 
                         uart1: serial@02020000 {
                               compatible = "fsl,imx6q-uart", "fsl,imx21-uart";
@@ -384,6 +395,14 @@
                         spba@0203c000 {
                               reg = <0x0203c000 0x4000>;
                         };
+                  };
+
+                  vpu@02040000 {
+                        status = "okay";
+                  };
+
+                  iomuxc: iomuxc@020e0000 {
+                        compatible = "fsl,imx6q-iomuxc";
                   };
 
                   vpu: vpu@02040000 {
@@ -1051,6 +1070,16 @@
                         clock-names = "dphy_clk", "pixel_clk", "cfg_clk";
                         status = "disabled";
                   };
+                  
+                  mipi_dsi: mipi@021e0000 {
+                        compatible = "fsl,imx6q-mipi-dsi";
+                        reg = <0x021e0000 0x4000>;
+                        interrupts = <0 102 0x04>;
+                        gpr = <&gpr>;
+                        clocks = <&clks 138>, <&clks 204>;
+                        clock-names = "mipi_pllref_clk", "mipi_cfg_clk";
+                        status = "disabled";
+                  };
 
                   vdoa@021e4000 {
                         compatible = "fsl,imx6q-vdoa";
@@ -1200,42 +1229,6 @@
                   compatible = "fsl,imx6q-hdmi-cec";
                   interrupts = <0 115 0x04>;
                   status = "disabled";
-            };
-
-
-            aips-bus@02000000 { /* AIPS1 */
-                  spba-bus@02000000 {
-                        ecspi5: ecspi@02018000 {
-                              #address-cells = <1>;
-                              #size-cells = <0>;
-                              compatible = "fsl,imx6q-ecspi", "fsl,imx51-ecspi";
-                              reg = <0x02018000 0x4000>;
-                              interrupts = <0 35 0x04>;
-                              clocks = <&clks 116>, <&clks 116>;
-                              clock-names = "ipg", "per";
-                              status = "disabled";
-                        };
-                  };
-
-                  vpu@02040000 {
-                        status = "okay";
-                  };
-
-                  iomuxc: iomuxc@020e0000 {
-                        compatible = "fsl,imx6q-iomuxc";
-                  };
-            };
-
-            aips-bus@02100000 { /* AIPS2 */
-                  mipi_dsi: mipi@021e0000 {
-                        compatible = "fsl,imx6q-mipi-dsi";
-                        reg = <0x021e0000 0x4000>;
-                        interrupts = <0 102 0x04>;
-                        gpr = <&gpr>;
-                        clocks = <&clks 138>, <&clks 204>;
-                        clock-names = "mipi_pllref_clk", "mipi_cfg_clk";
-                        status = "disabled";
-                  };
             };
 
             sata: sata@02200000 {
