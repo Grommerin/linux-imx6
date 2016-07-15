@@ -25,6 +25,9 @@
 		user_led {
 			gpios = <&gpio5 2 GPIO_ACTIVE_LOW>;
 		};
+		power_led {
+		      gpios = <&gpio3 18 GPIO_ACTIVE_LOW>;
+		};
 	};
 	
 	//mxcfb1: fb@0 {
