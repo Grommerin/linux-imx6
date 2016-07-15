@@ -108,51 +108,23 @@
 	hog {
 		pinctrl_hog: hoggrp {
 		fsl,pins = < 		
-			   /* Status_GPRS       | pin 125 | GPIO 185 */
-			MX6QDL_PAD_RGMII_RD0__GPIO6_IO25   0x80000000        // ok
-			//
-			   /* Flight_Mode_GPRS  | pin 127 | GPIO 188 */
-			MX6QDL_PAD_RGMII_RD2__GPIO6_IO28   0x80000000        // ok
-			//
-			   /* LED_WiFi          | pin 71  | GPIO 81 */
-			MX6QDL_PAD_EIM_D17__GPIO3_IO17     0x80000000        // ok
-			//MX6QDL_PAD_EIM_D17__ECSPI1_MISO
-			//
-			   /* LED_Power/Work    | pin 70  | GPIO 82 */
-			MX6QDL_PAD_EIM_D18__GPIO3_IO18     0x80000000        // ok
-			//MX6QDL_PAD_EIM_D18__ECSPI1_MOSI
-			//
-			   /* LED_CAN2          | pin 69  | GPIO 80 */
-			MX6QDL_PAD_EIM_D16__GPIO3_IO16     0x80000000        // ok
-                  //MX6QDL_PAD_EIM_D16__ECSPI1_SCLK
-                  //
-			   /* LED_CAN1          | pin 68  | GPIO 83 */
-			MX6QDL_PAD_DISP0_DAT15__GPIO5_IO09 0x80000000
-			//MX6QDL_PAD_EIM_D19__GPIO3_IO19     0x80000000        // ERRROR
+			MX6QDL_PAD_RGMII_RD0__GPIO6_IO25   0x80000000  /* Status_GPRS       | pin 125 | GPIO 185 */
+			MX6QDL_PAD_RGMII_RD2__GPIO6_IO28   0x80000000  /* Flight_Mode_GPRS  | pin 127 | GPIO 188 */
+			MX6QDL_PAD_EIM_D17__GPIO3_IO17     0x80000000  /* LED_WiFi          | pin 71  | GPIO 81 */
+			MX6QDL_PAD_EIM_D18__GPIO3_IO18     0x80000000  /* LED_Power/Work    | pin 70  | GPIO 82 */
+			MX6QDL_PAD_EIM_D16__GPIO3_IO16     0x80000000  /* LED_CAN2          | pin 69  | GPIO 80 */
+			   /* LED_CAN1          | pin 68  | GPIO 137 */
+			//MX6QDL_PAD_DISP0_DAT15__GPIO5_IO09 0x80000000        // ERRROR
+			MX6QDL_PAD_EIM_D19__GPIO3_IO19     0x80000000
                   //MX6QDL_PAD_EIM_D19__ECSPI1_SS1
-                  //
-			   /* Reset_Settings    | pin 38  | GPIO 191 */
-			MX6QDL_PAD_EIM_BCLK__GPIO6_IO31    0x80000000        // ok
-			//
-			   /* Power_GPRS        | pin 77  | GPIO 87 */
-                  MX6QDL_PAD_EIM_D23__GPIO3_IO23     0x80000000
-			// MX6QDL_PAD_SD3_DAT3__GPIO7_IO07    0x80000000        // ERRROR
-			// MX6QDL_PAD_EIM_D30__GPIO3_IO30     0x80000000        // ERRROR
-			//
-			   /* LED_GPS/GPRS      | pin 78  | GPIO 200 */
-                  MX6QDL_PAD_SD3_RST__GPIO7_IO08     0x80000000       // ok
-			//
-			   /* Pow_Good          | pin 72  | GPIO 89 */
-			MX6QDL_PAD_EIM_D25__GPIO3_IO25     0x80000000        // ok
-			//
-			   /* #Reset_GPRS       | pin 73  | GPIO 88 */
-			MX6QDL_PAD_EIM_D24__GPIO3_IO24     0x80000000        // ok
-			//
+			MX6QDL_PAD_EIM_BCLK__GPIO6_IO31    0x80000000  /* Reset_Settings    | pin 38  | GPIO 191 */
+                  MX6QDL_PAD_EIM_D23__GPIO3_IO23     0x80000000  /* Power_GPRS        | pin 77  | GPIO 87 */
+                  MX6QDL_PAD_SD3_RST__GPIO7_IO08     0x80000000  /* LED_GPS/GPRS      | pin 78  | GPIO 200 */
+			MX6QDL_PAD_EIM_D25__GPIO3_IO25     0x80000000  /* Pow_Good          | pin 72  | GPIO 89 */
+			MX6QDL_PAD_EIM_D24__GPIO3_IO24     0x80000000  /* #Reset_GPRS       | pin 73  | GPIO 88 */
 			   /* NOR_Vpp/Wp#       | pin 26  | GPIO ??? */
 			   /* NOR_Reset#        | pin 37  | GPIO ??? */
 			   /* NOR_x8/x16        | pin 36  | GPIO ??? */
-			//MX6QDL_PAD_EIM_D28__GPIO3_IO28   0x80000000
-			//MX6QDL_PAD_EIM_A25__GPIO5_IO02   0x80000000
 		>;
 		};
 	};
