@@ -397,14 +397,6 @@
                         };
                   };
 
-                  vpu@02040000 {
-                        status = "okay";
-                  };
-
-                  iomuxc: iomuxc@020e0000 {
-                        compatible = "fsl,imx6q-iomuxc";
-                  };
-
                   vpu: vpu@02040000 {
                         compatible = "fsl,imx6-vpu";
                         reg = <0x02040000 0x3c000>;
@@ -417,7 +409,7 @@
                         iram = <&ocram>;
                         resets = <&src 1>;
                         pu-supply = <&reg_pu>;
-                        status = "disabled";
+                        status = "okay";
                   };
 
                   aipstz@0207c000 { /* AIPSTZ1 */
@@ -775,6 +767,7 @@
                   };
 
                   iomuxc: iomuxc@020e0000 {
+                        compatible = "fsl,imx6q-iomuxc";
                         reg = <0x020e0000 0x4000>;
                   };
 
