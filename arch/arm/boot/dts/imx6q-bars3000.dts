@@ -113,8 +113,8 @@
 			MX6QDL_PAD_EIM_D17__GPIO3_IO17     0x80000000  /* LED_WiFi          | pin 71  | GPIO 81 */
 			MX6QDL_PAD_EIM_D18__GPIO3_IO18     0x80000000  /* LED_Power/Work    | pin 70  | GPIO 82 */
 			MX6QDL_PAD_EIM_D16__GPIO3_IO16     0x80000000  /* LED_CAN2          | pin 69  | GPIO 80 */
-			   /* LED_CAN1          | pin 68  | GPIO 137 */
-			//MX6QDL_PAD_DISP0_DAT15__GPIO5_IO09 0x80000000        // ERRROR
+			   /* LED_CAN1          | pin 68  | GPIO 83 */
+			MX6QDL_PAD_DISP0_DAT15__GPIO5_IO09 0x80000000        // ERRROR
 			MX6QDL_PAD_EIM_D19__GPIO3_IO19     0x80000000
                   //MX6QDL_PAD_EIM_D19__ECSPI1_SS1
 			MX6QDL_PAD_EIM_BCLK__GPIO6_IO31    0x80000000  /* Reset_Settings    | pin 38  | GPIO 191 */
@@ -184,12 +184,12 @@
 //	pu-supply = <&reg_pu>; /* ldo-bypass:use pu_dummy if VDDSOC share with VDDPU */
 //};
 
-&fec {
-	pinctrl-names = "default";
-	pinctrl-0 = <&pinctrl_enet_1>;
-	phy-mode = "rgmii";
-	status = "okay";
-};
+//&fec {
+//	pinctrl-names = "default";
+//	pinctrl-0 = <&pinctrl_enet_1>;
+//	phy-mode = "rgmii";
+//	status = "okay";
+//};
 
 //&hdmi_core {
 //	ipu_id = <1>;
