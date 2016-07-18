@@ -202,6 +202,9 @@
 
 #ifdef USE_STRIM_FLEXCAN
 
+#define FLEXCAN_GPIO_0             (106)
+#define FLEXCAN_GPIO_1             (80)
+
  /* Flexcan precalc bitrate settings */
 #define FLEXCAN_BTRT_1000_SP866    (0x01290005)
 #define FLEXCAN_BTRT_1000_SP800    (0x012a0004)
@@ -323,6 +326,9 @@ struct flexcan_c_device {
     wait_queue_head_t inq, outq;         /* Очереди ожидания данных */
     struct fasync_struct *async_queue;  /* Структура для вызовов poll и select */
 
+/* Номер GPIO порта для моргания */
+    int gpio_led;
+
     // int (*do_set_bittiming)(__u8 *dev_num, struct can_bittiming *bittiming);
     int (*do_set_mode)(__u8 *dev_num, enum can_mode mode);                  // вернуть когда буду убирать netdevice
     // int (*do_get_state)(__u8 *dev_num, enum can_state *state);
@@ -421,6 +427,8 @@ static struct flexcan_c_device *f_chrdev;
 
 static struct flexcan_c_bsend *f_bsend;
 static struct flexcan_c_brecv *f_brecv;
+
+static const flexcan_gpio_num[2] = {FLEXCAN_GPIO_0, FLEXCAN_GPIO_1};
 
 
 static unsigned int flexcan_start_transmit(const u8 dev_num);
@@ -1887,6 +1895,8 @@ static irqreturn_t flexcan_irq(int irq, void *dev_id)
         }
         stats->int_rx_frame++;
 
+        gpio_set_value(f_cdev->gpio_led, 1);
+
         read_frames = 0;
         while((read_frames < 10) && (reg_iflag1 & FLEXCAN_IFLAG_RX_FIFO_AVAILABLE)) {
             do_gettimeofday(&time);
@@ -1935,6 +1945,7 @@ static irqreturn_t flexcan_irq(int irq, void *dev_id)
             kill_fasync(&(f_cdev->async_queue), SIGIO, POLL_IN);
         }
     }
+    gpio_set_value(f_cdev->gpio_led, 0);
 
     return IRQ_HANDLED;
 }
@@ -2870,6 +2881,9 @@ static int flexcan_probe(struct platform_device *pdev)
         goto failed_kmalloc_dev;
     }
 
+    gpio_request(flexcan_gpio_num[dev_num], "sysfs");
+    gpio_direction_output(flexcan_gpio_num[dev_num], false);
+    gpio_export(flexcan_gpio_num[dev_num], false);
 
     of_id = of_match_device(flexcan_of_match, &pdev->dev);
     if(of_id) {
@@ -2901,6 +2915,7 @@ static int flexcan_probe(struct platform_device *pdev)
     f_cdev->clk_ipg = clk_ipg;
     f_cdev->clk_per = clk_per;
     f_cdev->pdata = pdev->dev.platform_data;
+    f_cdev->gpio_led = flexcan_gpio_num[dev_num];
 
     if(flexcan_c_is_init() == 0) {
         err = alloc_chrdev_region(&f_drv->devt, FLEXCAN_DEV_FIRST, FLEXCAN_DEV_COUNT, f_drv->name);
@@ -2961,6 +2976,7 @@ static int flexcan_probe(struct platform_device *pdev)
     }
  failed_devtype:
  failed_reg_chrdev:
+    gpio_free(flexcan_gpio_num[dev_num]);
     iounmap(base);
     flexcan_c_free_device(dev_num);
  failed_kmalloc_dev:
@@ -3135,12 +3151,13 @@ static int flexcan_remove(struct platform_device *pdev)
     }
     f_cdev = &f_chrdev[dev_num];
 
-    printk("%s driver %s func: dev_num %d start\n", FLEXCAN_DRV_NAME, __FUNCTION__, dev_num);
-    printk("%s driver %s func: &f_chrdev[%d] 0x%x\n", FLEXCAN_DRV_NAME, __FUNCTION__, dev_num,  &f_chrdev[dev_num]);
-    printk("%s driver %s func: f_cdev 0x%x\n", FLEXCAN_DRV_NAME, __FUNCTION__, f_cdev);
-    printk("%s driver %s func: f_drv 0x%x\n", FLEXCAN_DRV_NAME, __FUNCTION__, f_drv);
-    printk("%s driver %s func: f_drv->f_class 0x%x\n", FLEXCAN_DRV_NAME, __FUNCTION__, f_drv->f_class);
-    printk("%s driver %s func: flexcan_c_is_init() = %d\n", FLEXCAN_DRV_NAME, __FUNCTION__, flexcan_c_is_init());
+    gpio_free(f_cdev->gpio_led);
+//    printk("%s driver %s func: dev_num %d start\n", FLEXCAN_DRV_NAME, __FUNCTION__, dev_num);
+//    printk("%s driver %s func: &f_chrdev[%d] 0x%x\n", FLEXCAN_DRV_NAME, __FUNCTION__, dev_num,  &f_chrdev[dev_num]);
+//    printk("%s driver %s func: f_cdev 0x%x\n", FLEXCAN_DRV_NAME, __FUNCTION__, f_cdev);
+//    printk("%s driver %s func: f_drv 0x%x\n", FLEXCAN_DRV_NAME, __FUNCTION__, f_drv);
+//    printk("%s driver %s func: f_drv->f_class 0x%x\n", FLEXCAN_DRV_NAME, __FUNCTION__, f_drv->f_class);
+//    printk("%s driver %s func: flexcan_c_is_init() = %d\n", FLEXCAN_DRV_NAME, __FUNCTION__, flexcan_c_is_init());
 
     flexcan_close(dev_num);
 
