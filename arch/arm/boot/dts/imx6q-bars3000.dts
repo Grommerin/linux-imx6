@@ -118,8 +118,6 @@
 			MX6QDL_PAD_EIM_EB1__GPIO2_IO29     0x80000000  /* NOR_Vpp/Wp#       | pin 26  | GPIO ??? */
 			MX6QDL_PAD_EIM_EB2__GPIO2_IO30     0x80000000  /* NOR_Reset#        | pin 37  | GPIO ??? */
 			MX6QDL_PAD_EIM_EB3__GPIO2_IO31     0x80000000  /* NOR_x8/x16        | pin 36  | GPIO ??? */
-			MX6QDL_PAD_KEY_COL1__GPIO4_IO08    0x80000000
-                  MX6QDL_PAD_KEY_ROW1__GPIO4_IO09    0x80000000
 		>;
 		};
 	};
@@ -277,11 +275,11 @@
 	status = "okay";
 };
 
-//&uart5 {
-//	pinctrl-names = "default";
-//	pinctrl-0 = <&pinctrl_uart5_1>;
-//	status = "okay";
-//};
+&uart5 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_uart5_1>;
+	status = "okay";
+};
 
 
 //&usbh1 {
