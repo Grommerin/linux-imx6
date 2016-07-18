@@ -72,7 +72,7 @@
 #include "chr_flexcan.h"
 
 #define FLEXCAN_DRV_NAME           "flexcan"
-#define FLEXCAN_DRV_VER            "1.3.54"
+#define FLEXCAN_DRV_VER            "1.3.55"
 #else
 #define DRV_NAME			"flexcan"
 #endif
@@ -2881,10 +2881,6 @@ static int flexcan_probe(struct platform_device *pdev)
         goto failed_kmalloc_dev;
     }
 
-    gpio_request(flexcan_gpio_num[dev_num], "sysfs");
-    gpio_direction_output(flexcan_gpio_num[dev_num], false);
-    gpio_export(flexcan_gpio_num[dev_num], false);
-
     of_id = of_match_device(flexcan_of_match, &pdev->dev);
     if(of_id) {
         devtype_data = of_id->data;
@@ -2896,6 +2892,10 @@ static int flexcan_probe(struct platform_device *pdev)
         err = -ENODEV;
         goto failed_devtype;
     }
+
+    gpio_request(flexcan_gpio_num[dev_num], "sysfs");
+    gpio_direction_output(flexcan_gpio_num[dev_num], false);
+    gpio_export(flexcan_gpio_num[dev_num], false);
 
     f_drv->devtype_data = devtype_data;
     strcpy(f_drv->name, FLEXCAN_DRV_NAME);
@@ -2976,6 +2976,7 @@ static int flexcan_probe(struct platform_device *pdev)
     }
  failed_devtype:
  failed_reg_chrdev:
+    gpio_unexport(flexcan_gpio_num[dev_num]);
     gpio_free(flexcan_gpio_num[dev_num]);
     iounmap(base);
     flexcan_c_free_device(dev_num);
@@ -3151,6 +3152,7 @@ static int flexcan_remove(struct platform_device *pdev)
     }
     f_cdev = &f_chrdev[dev_num];
 
+    gpio_unexport(f_cdev->gpio_led);
     gpio_free(f_cdev->gpio_led);
 //    printk("%s driver %s func: dev_num %d start\n", FLEXCAN_DRV_NAME, __FUNCTION__, dev_num);
 //    printk("%s driver %s func: &f_chrdev[%d] 0x%x\n", FLEXCAN_DRV_NAME, __FUNCTION__, dev_num,  &f_chrdev[dev_num]);
