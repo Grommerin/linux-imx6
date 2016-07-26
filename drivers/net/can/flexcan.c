@@ -68,6 +68,7 @@
 #include <linux/fcntl.h>
 #include <linux/poll.h>
 #include <linux/init.h>
+#include <linux/utsname.h>
 
 #include "chr_flexcan.h"
 
@@ -202,8 +203,13 @@
 
 #ifdef USE_STRIM_FLEXCAN
 
-#define FLEXCAN_GPIO_0             (106)
-#define FLEXCAN_GPIO_1             (80)
+#define FLEXCAN_BARS_NAME          "bars3000"
+#define FLEXCAN_BARS_GPIO_0        (106)
+#define FLEXCAN_BARS_GPIO_1        (80)
+
+#define FLEXCAN_MARS_NAME          "marsboard"
+#define FLEXCAN_MARS_GPIO_0        (204)
+#define FLEXCAN_MARS_GPIO_1        (205)
 
  /* Flexcan precalc bitrate settings */
 #define FLEXCAN_BTRT_1000_SP866    (0x01290005)
@@ -306,8 +312,10 @@ struct flexcan_c_device {
  * Создается в функции chip_start */
     u32 reg_ctrl_default;
 
+#ifdef FLEXCAN_USE_AUTOBAUD
     u8 autoset_bittiming_flags; /* Флаги процесса автонастройки скорости */
     u32 reg_ctrl_autoset;       /* Сохраненное значение регистра CTRL при настрйоке скорости */
+#endif
 
     u8 irq_num;                 /* Номер вектора прерывания IRQ для устройства */
     struct cdev chrdev;        /* Структура символьного утсройства */
@@ -436,7 +444,7 @@ static struct flexcan_c_device *f_chrdev;
 static struct flexcan_c_bsend *f_bsend;
 static struct flexcan_c_brecv *f_brecv;
 
-static const flexcan_gpio_num[2] = {FLEXCAN_GPIO_0, FLEXCAN_GPIO_1};
+static int flexcan_gpio_num[2];
 
 
 static unsigned int flexcan_start_transmit(const u8 dev_num);
@@ -1601,6 +1609,7 @@ static irqreturn_t flexcan_irq(int irq, void *dev_id)
         }
     }
 
+#ifdef FLEXCAN_USE_AUTOBAUD
     if(f_cdev->autoset_bittiming_flags & FLEXCAN_AUTOSET_WORK) {
         if(reg_esr & FLEXCAN_ESR_BIT0_ERR) {
             f_cdev->autoset_bittiming_flags |= FLEXCAN_AUTOSET_ERR;
@@ -1611,6 +1620,7 @@ static irqreturn_t flexcan_irq(int irq, void *dev_id)
 
         flexcan_autoset_baudrate(dev_num);
     }
+#endif
 
     if((reg_esr & FLEXCAN_ESR_ERR_STATE) || (flexcan_has_and_handle_berr(stats, reg_esr))) {
         stats->int_state++;
@@ -1739,6 +1749,10 @@ static int flexcan_chip_start(const u8 dev_num)
     flexcan_write(reg_mcr, &regs->mcr);
     stats->reg_mcr = flexcan_read(&regs->mcr);
     stats->state = CAN_STATE_ERROR_ACTIVE;
+
+    if(f_cdev->reg_ctrl_bittiming & FLEXCAN_CTRL_LOM) {
+        stats->state = CAN_STATE_ERROR_PASSIVE
+    }
 
     flexcan_write(FLEXCAN_IFLAG_DEFAULT, &regs->imask1);   /* enable FIFO interrupts */
 
@@ -2285,6 +2299,7 @@ static inline void flexcan_c_cdev_clear(struct flexcan_c_device *f_cdev)
 }
 
 
+#ifdef FLEXCAN_USE_AUTOBAUD
 static int flexcan_autoset_baudrate(const u8 dev_num)
 {
     struct flexcan_c_device *f_cdev = &f_chrdev[dev_num];
@@ -2372,6 +2387,7 @@ static int flexcan_autoset_baudrate(const u8 dev_num)
 
     return 0;
 }
+#endif
 
 
 static int flexcan_probe(struct platform_device *pdev)
@@ -2458,6 +2474,21 @@ static int flexcan_probe(struct platform_device *pdev)
     else{
         err = -ENODEV;
         goto failed_devtype;
+    }
+
+    // FIXME костыль костыльный
+    if(utsname()->nodename == FLEXCAN_BARS_NAME) {
+        flexcan_gpio_num[0] = FLEXCAN_BARS_GPIO_0;
+        flexcan_gpio_num[1] = FLEXCAN_BARS_GPIO_1;
+    }
+    else if(utsname()->nodename == FLEXCAN_MARS_NAME) {
+        flexcan_gpio_num[0] = FLEXCAN_MARS_GPIO_0;
+        flexcan_gpio_num[1] = FLEXCAN_MARS_GPIO_1;
+    }
+    else {
+        printk("%s driver not know nodename %s\n", FLEXCAN_DRV_NAME, utsname()->nodename);
+        flexcan_gpio_num[0] = FLEXCAN_BARS_GPIO_0;
+        flexcan_gpio_num[1] = FLEXCAN_BARS_GPIO_1;
     }
 
     gpio_request(flexcan_gpio_num[dev_num], "sysfs");
