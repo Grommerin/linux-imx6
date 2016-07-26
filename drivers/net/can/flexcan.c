@@ -1751,7 +1751,7 @@ static int flexcan_chip_start(const u8 dev_num)
     stats->state = CAN_STATE_ERROR_ACTIVE;
 
     if(f_cdev->reg_ctrl_bittiming & FLEXCAN_CTRL_LOM) {
-        stats->state = CAN_STATE_ERROR_PASSIVE
+        stats->state = CAN_STATE_ERROR_PASSIVE;
     }
 
     flexcan_write(FLEXCAN_IFLAG_DEFAULT, &regs->imask1);   /* enable FIFO interrupts */
