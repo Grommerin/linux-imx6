@@ -451,7 +451,9 @@ static unsigned int flexcan_start_transmit(const u8 dev_num);
 static void flexcan_set_bittiming(const u8 dev_num, const u32 reg_ctrl);
 static void flexcan_chip_stop(const u8 dev_num);
 static int flexcan_chip_start(const u8 dev_num);
+#ifdef FLEXCAN_USE_AUTOBAUD
 static int flexcan_autoset_baudrate(const u8 dev_num);
+#endif
 #endif
 
 /*
@@ -1928,7 +1930,9 @@ static int flexcan_open(const u8 dev_num)
         goto out;
     }
 
+#ifdef FLEXCAN_USE_AUTOBAUD
     flexcan_autoset_baudrate(dev_num);
+#endif
 
 //    err = flexcan_chip_start(dev_num);  /* start chip and queuing */
 //    if(err) {
