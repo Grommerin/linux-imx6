@@ -112,6 +112,9 @@
 	hog {
 		pinctrl_hog: hoggrp {
 		fsl,pins = < 		
+		      /* gpio-leds */
+                  MX6QDL_PAD_EIM_D28__GPIO3_IO28     0x80000000
+                  // MX6QDL_PAD_EIM_A25__GPIO5_IO02     0x80000000
 
 			MX6QDL_PAD_EIM_BCLK__GPIO6_IO31    0x80000000  /* Reset_Settings    | pin 38  | GPIO 191 */
 			MX6QDL_PAD_EIM_D25__GPIO3_IO25     0x80000000  /* Pow_Good          | pin 72  | GPIO 89 */
@@ -130,9 +133,6 @@
                   MX6QDL_PAD_EIM_D18__GPIO3_IO18     0x80000000  /* LED_Power/Work    | pin 70  | GPIO 82 */
                   MX6QDL_PAD_EIM_D16__GPIO3_IO16     0x80000000  /* LED_CAN2          | pin 69  | GPIO 80 */
                   MX6QDL_PAD_KEY_COL2__GPIO4_IO10    0x80000000  /* LED_CAN1          | pin 68  | GPIO 106 */
-                  /* gpio-leds */
-                  MX6QDL_PAD_EIM_D28__GPIO3_IO28     0x80000000
-                  // MX6QDL_PAD_EIM_A25__GPIO5_IO02     0x80000000
 	     >;
 	     };
 	};
