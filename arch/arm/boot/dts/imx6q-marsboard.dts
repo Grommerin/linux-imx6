@@ -26,22 +26,25 @@
 			gpios = <&gpio5 2 GPIO_ACTIVE_LOW>;
 		};
 		wifi_led {
+		      label = "WiFi Activity";
 		      gpios = <&gpio1 7 GPIO_ACTIVE_HIGH>;
+		      default-state = "off";
 		};
 		work_led {
+		      label = "Power/Work Activity";
 		      gpios = <&gpio4 9 GPIO_ACTIVE_HIGH>;
-		      output-low;
-		      line-name = "Power/Work";
+		      default-state = "on";
 		};
-		can_led {
-		      gpios = <&gpio5 24 GPIO_ACTIVE_HIGH>,
-		              <&gpio5 25 GPIO_ACTIVE_HIGH>;
+		can0_led {
+		      label = "CAN0 Activity";
+		      gpios = <&gpio5 24 GPIO_ACTIVE_HIGH>;
+		      default-state = "off";
 		};
-		gprs_led {
-		      gpios = <&gpio5 26 GPIO_ACTIVE_LOW>;
-		      input;
-		      line-name = "GPS/GPRS";
-		};
+		can1_led {
+		      label = "CAN1 Activity";
+                  gpios = <&gpio5 25 GPIO_ACTIVE_HIGH>;
+                  default-state = "off";
+            };
 	};
 	
 	//mxcfb1: fb@0 {
