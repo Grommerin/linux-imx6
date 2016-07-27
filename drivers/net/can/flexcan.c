@@ -73,7 +73,7 @@
 #include "chr_flexcan.h"
 
 #define FLEXCAN_DRV_NAME           "flexcan"
-#define FLEXCAN_DRV_VER            "1.3.56"
+#define FLEXCAN_DRV_VER            "1.3.57"
 #else
 #define DRV_NAME			"flexcan"
 #endif
@@ -203,13 +203,12 @@
 
 #ifdef USE_STRIM_FLEXCAN
 
-#define FLEXCAN_BARS_NAME          "bars3000"
-#define FLEXCAN_BARS_GPIO_0        (106)
-#define FLEXCAN_BARS_GPIO_1        (80)
-
-#define FLEXCAN_MARS_NAME          "marsboard"
-#define FLEXCAN_MARS_GPIO_0        (204)
-#define FLEXCAN_MARS_GPIO_1        (205)
+// Для BARS3000
+//#define FLEXCAN_GPIO_0        (106)
+//#define FLEXCAN_GPIO_1        (80)
+// Для BARS2000 (MarsBoard)
+#define FLEXCAN_GPIO_0        (152)
+#define FLEXCAN_GPIO_1        (153)
 
  /* Flexcan precalc bitrate settings */
 #define FLEXCAN_BTRT_1000_SP866    (0x01290005)
@@ -444,7 +443,7 @@ static struct flexcan_c_device *f_chrdev;
 static struct flexcan_c_bsend *f_bsend;
 static struct flexcan_c_brecv *f_brecv;
 
-static int flexcan_gpio_num[2];
+static int flexcan_gpio_num[2] = {FLEXCAN_GPIO_0, FLEXCAN_GPIO_1};
 
 
 static unsigned int flexcan_start_transmit(const u8 dev_num);
@@ -2478,21 +2477,6 @@ static int flexcan_probe(struct platform_device *pdev)
     else{
         err = -ENODEV;
         goto failed_devtype;
-    }
-
-    // FIXME костыль костыльный
-    if(utsname()->nodename == FLEXCAN_BARS_NAME) {
-        flexcan_gpio_num[0] = FLEXCAN_BARS_GPIO_0;
-        flexcan_gpio_num[1] = FLEXCAN_BARS_GPIO_1;
-    }
-    else if(utsname()->nodename == FLEXCAN_MARS_NAME) {
-        flexcan_gpio_num[0] = FLEXCAN_MARS_GPIO_0;
-        flexcan_gpio_num[1] = FLEXCAN_MARS_GPIO_1;
-    }
-    else {
-        printk("%s driver not know nodename %s\n", FLEXCAN_DRV_NAME, utsname()->nodename);
-        flexcan_gpio_num[0] = FLEXCAN_BARS_GPIO_0;
-        flexcan_gpio_num[1] = FLEXCAN_BARS_GPIO_1;
     }
 
     gpio_request(flexcan_gpio_num[dev_num], "sysfs");
