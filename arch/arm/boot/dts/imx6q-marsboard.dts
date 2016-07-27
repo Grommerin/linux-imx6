@@ -25,6 +25,23 @@
 		user_led {
 			gpios = <&gpio5 2 GPIO_ACTIVE_LOW>;
 		};
+		wifi_led {
+		      gpios = <&gpio1 7 GPIO_ACTIVE_HIGH>;
+		};
+		work_led {
+		      gpios = <&gpio4 9 GPIO_ACTIVE_HIGH>;
+		      output-low;
+		      line-name = "Power/Work";
+		};
+		can_led {
+		      gpios = <&gpio5 24 GPIO_ACTIVE_HIGH>,
+		              <&gpio5 25 GPIO_ACTIVE_HIGH>;
+		};
+		gprs_led {
+		      gpios = <&gpio5 26 GPIO_ACTIVE_LOW>;
+		      input;
+		      line-name = "GPS/GPRS";
+		};
 	};
 	
 	//mxcfb1: fb@0 {
