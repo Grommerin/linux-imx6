@@ -3,330 +3,330 @@
 #include "imx6q-bars3000.dtsi"
 
 / {
-  	model = "BARS 3000 i.MX6 Quad Board";
-	compatible = "strim,imx6q-bars3000", "fsl,imx6q";
-	//aliases {
-	//	mxcfb0 = &mxcfb1;
-	//	mxcfb1 = &mxcfb2;
-	//	mxcfb2 = &mxcfb3;
-	//	mxcfb3 = &mxcfb4;
-	//};
+      model = "BARS 3000 i.MX6 Quad Board";
+    compatible = "strim,imx6q-bars3000", "fsl,imx6q";
+    //aliases {
+    //    mxcfb0 = &mxcfb1;
+    //    mxcfb1 = &mxcfb2;
+    //    mxcfb2 = &mxcfb3;
+    //    mxcfb3 = &mxcfb4;
+    //};
 
-	memory {
-		reg = <0x10000000 0x40000000>;
-	};
+    memory {
+        reg = <0x10000000 0x40000000>;
+    };
 
-	leds { /* see iomuxc definition below */
-		compatible = "gpio-leds";
-		sys_led {
-			gpios = <&gpio3 28 GPIO_ACTIVE_LOW>;
-			linux,default-trigger = "heartbeat";
-		};
-		user_led {
-			gpios = <&gpio5 2 GPIO_ACTIVE_LOW>;
-		};
-		power_led {
-		      gpios = <&gpio3 18 GPIO_ACTIVE_LOW>;
-		};
-	};
-	
-	//mxcfb1: fb@0 {
-	//	compatible = "fsl,mxc_sdc_fb";
-	//	disp_dev = "hdmi";
-	//	interface_pix_fmt = "RGB24";
-	//	mode_str ="1280x720M@60";
-	//	default_bpp = <32>;
-	//	int_clk = <0>;
-	//	late_init = <0>;
-	//	status = "okay";
-	//};
+    leds { /* see iomuxc definition below */
+        compatible = "gpio-leds";
+        sys_led {
+            gpios = <&gpio3 28 GPIO_ACTIVE_LOW>;
+            linux,default-trigger = "heartbeat";
+        };
+        user_led {
+            gpios = <&gpio5 2 GPIO_ACTIVE_LOW>;
+        };
+        power_led {
+              gpios = <&gpio3 18 GPIO_ACTIVE_LOW>;
+        };
+    };
+    
+    //mxcfb1: fb@0 {
+    //    compatible = "fsl,mxc_sdc_fb";
+    //    disp_dev = "hdmi";
+    //    interface_pix_fmt = "RGB24";
+    //    mode_str ="1280x720M@60";
+    //    default_bpp = <32>;
+    //    int_clk = <0>;
+    //    late_init = <0>;
+    //    status = "okay";
+    //};
 
-	//mxcfb2: fb@1 {
-	//	compatible = "fsl,mxc_sdc_fb";
-	//	disp_dev = "ldb";
-	//	interface_pix_fmt = "RGB666";
-	//	mode_str ="LDB-XGA";
-	//	default_bpp = <16>;
-	//	int_clk = <0>;
-	//	late_init = <0>;
-	//	status = "disabled";
-	//};
+    //mxcfb2: fb@1 {
+    //    compatible = "fsl,mxc_sdc_fb";
+    //    disp_dev = "ldb";
+    //    interface_pix_fmt = "RGB666";
+    //    mode_str ="LDB-XGA";
+    //    default_bpp = <16>;
+    //    int_clk = <0>;
+    //    late_init = <0>;
+    //    status = "disabled";
+    //};
 
-	//mxcfb3: fb@2 {
-	//	compatible = "fsl,mxc_sdc_fb";
-	//	disp_dev = "lcd";
-	//	interface_pix_fmt = "RGB565";
-	//	mode_str ="CLAA-WVGA";
-	//	default_bpp = <16>;
-	//	int_clk = <0>;
-	//	late_init = <0>;
-	//	status = "disabled";
-	//};
+    //mxcfb3: fb@2 {
+    //    compatible = "fsl,mxc_sdc_fb";
+    //    disp_dev = "lcd";
+    //    interface_pix_fmt = "RGB565";
+    //    mode_str ="CLAA-WVGA";
+    //    default_bpp = <16>;
+    //    int_clk = <0>;
+    //    late_init = <0>;
+    //    status = "disabled";
+    //};
 
-	//mxcfb4: fb@3 {
-	//	compatible = "fsl,mxc_sdc_fb";
-	//	disp_dev = "ldb";
-	//	interface_pix_fmt = "RGB666";
-	//	mode_str ="LDB-XGA";
-	//	default_bpp = <16>;
-	//	int_clk = <0>;
-	//	late_init = <0>;
-	//	status = "disabled";
-	//};
+    //mxcfb4: fb@3 {
+    //    compatible = "fsl,mxc_sdc_fb";
+    //    disp_dev = "ldb";
+    //    interface_pix_fmt = "RGB666";
+    //    mode_str ="LDB-XGA";
+    //    default_bpp = <16>;
+    //    int_clk = <0>;
+    //    late_init = <0>;
+    //    status = "disabled";
+    //};
 
-	v4l2_cap_0 {
-		compatible = "fsl,imx6q-v4l2-capture";
-		ipu_id = <0>;
-		csi_id = <0>;
-		mclk_source = <0>;
-		status = "disabled";
-	}; 
+    v4l2_cap_0 {
+        compatible = "fsl,imx6q-v4l2-capture";
+        ipu_id = <0>;
+        csi_id = <0>;
+        mclk_source = <0>;
+        status = "disabled";
+    }; 
 
-	v4l2_cap_1 {
-		compatible = "fsl,imx6q-v4l2-capture";
-		ipu_id = <0>;
-		csi_id = <1>;
-		mclk_source = <0>;
-		status = "disabled";
-	};
+    v4l2_cap_1 {
+        compatible = "fsl,imx6q-v4l2-capture";
+        ipu_id = <0>;
+        csi_id = <1>;
+        mclk_source = <0>;
+        status = "disabled";
+    };
 
-	v4l2_out { // v4l2 output support: /dev/video16 + /dev/video17
-		compatible = "fsl,mxc_v4l2_output";
-		status = "okay";
-	};
+    v4l2_out { // v4l2 output support: /dev/video16 + /dev/video17
+        compatible = "fsl,mxc_v4l2_output";
+        status = "okay";
+    };
 
-//	pwmleds {
-//		compatible = "pwm-leds";
-//		my_pwm {
-//			pwms = <&pwm4 0 5000000>;
-//			max-brightness = <255>;
-//		};
-//	};
+//    pwmleds {
+//        compatible = "pwm-leds";
+//        my_pwm {
+//            pwms = <&pwm4 0 5000000>;
+//            max-brightness = <255>;
+//        };
+//    };
 };
 
 &iomuxc {
-      pinctrl-names = "default";
-	pinctrl-0 = <&pinctrl_hog>;
-	pinctrl-1 = <&pinctrl_gprs>;
+    pinctrl-names = "default";
+    pinctrl-0 = <&pinctrl_hog>;
+    pinctrl-1 = <&pinctrl_gprs>;
 
-	hog {
-		pinctrl_hog: hoggrp {
-		fsl,pins = < 		
-		      /* gpio-leds */
-                  MX6QDL_PAD_EIM_D28__GPIO3_IO28     0x80000000
-                  // MX6QDL_PAD_EIM_A25__GPIO5_IO02     0x80000000
+    hog {
+        pinctrl_hog: hoggrp {
+        fsl,pins = <         
+            /* gpio-leds */
+            MX6QDL_PAD_EIM_D28__GPIO3_IO28     0x80000000
+//          MX6QDL_PAD_EIM_A25__GPIO5_IO02     0x80000000
 
-			MX6QDL_PAD_EIM_BCLK__GPIO6_IO31    0x80000000  /* Reset_Settings    | pin 38  | GPIO 191 */
-			MX6QDL_PAD_EIM_D25__GPIO3_IO25     0x80000000  /* Pow_Good          | pin 72  | GPIO 89 */
-			MX6QDL_PAD_EIM_EB1__GPIO2_IO29     0x80000000  /* NOR_Vpp/Wp#       | pin 26  | GPIO ??? */
-			MX6QDL_PAD_EIM_EB2__GPIO2_IO30     0x80000000  /* NOR_Reset#        | pin 37  | GPIO ??? */
-			MX6QDL_PAD_EIM_EB3__GPIO2_IO31     0x80000000  /* NOR_x8/x16        | pin 36  | GPIO ??? */
-		>;
-		};
-	};
-	
-	led {
-	     pinctrl_led: ledgrp {
-	     fsl,pins = <
-	            MX6QDL_PAD_SD3_RST__GPIO7_IO08     0x80000000  /* LED_GPS/GPRS      | pin 78  | GPIO 200 */
-                  MX6QDL_PAD_EIM_D17__GPIO3_IO17     0x80000000  /* LED_WiFi          | pin 71  | GPIO 81 */
-                  MX6QDL_PAD_EIM_D18__GPIO3_IO18     0x80000000  /* LED_Power/Work    | pin 70  | GPIO 82 */
-                  MX6QDL_PAD_EIM_D16__GPIO3_IO16     0x80000000  /* LED_CAN2          | pin 69  | GPIO 80 */
-                  MX6QDL_PAD_KEY_COL2__GPIO4_IO10    0x80000000  /* LED_CAN1          | pin 68  | GPIO 106 */
-	     >;
-	     };
-	};
-	
-	gprs {
-	     pinctrl_gprs: gprsgrp {
-	     fsl,pins = <
-	           MX6QDL_PAD_SD3_DAT2__GPIO7_IO06     0x80000000  /* Status_GPRS       | pin 131 | GPIO 198 */
-	           MX6QDL_PAD_RGMII_RD2__GPIO6_IO28    0x80000000  /* Flight_Mode_GPRS  | pin 127 | GPIO 188 */
-	           MX6QDL_PAD_EIM_D23__GPIO3_IO23      0x80000000  /* Power_GPRS        | pin 77  | GPIO 87 */
-	           MX6QDL_PAD_EIM_D24__GPIO3_IO24      0x80000000  /* #Reset_GPRS       | pin 73  | GPIO 88 */
-	     >;
-	     };
-	};
-	
+            MX6QDL_PAD_EIM_BCLK__GPIO6_IO31    0x80000000  /* Btn_ResetSettings | pin 38  | GPIO 191 */
+            MX6QDL_PAD_EIM_D25__GPIO3_IO25     0x80000000  /* Pow_Good          | pin 72  | GPIO 89 */
+            MX6QDL_PAD_EIM_EB1__GPIO2_IO29     0x80000000  /* NOR_Vpp/Wp#       | pin 26  | GPIO ??? */
+            MX6QDL_PAD_EIM_EB2__GPIO2_IO30     0x80000000  /* NOR_Reset#        | pin 37  | GPIO ??? */
+            MX6QDL_PAD_EIM_EB3__GPIO2_IO31     0x80000000  /* NOR_x8/x16        | pin 36  | GPIO ??? */
+        >;
+        };
+    };
+    
+    led {
+        pinctrl_led: ledgrp {
+        fsl,pins = <
+            MX6QDL_PAD_EIM_D18__GPIO3_IO18     0x80000000  /* LED_Power/Work    | pin 70  | GPIO 82 */
+            MX6QDL_PAD_SD3_RST__GPIO7_IO08     0x80000000  /* LED_GPS/GPRS      | pin 78  | GPIO 200 */
+            MX6QDL_PAD_EIM_D17__GPIO3_IO17     0x80000000  /* LED_WiFi          | pin 71  | GPIO 81 */
+            MX6QDL_PAD_KEY_COL2__GPIO4_IO10    0x80000000  /* LED_CAN1          | pin 68  | GPIO 106 */
+            MX6QDL_PAD_EIM_D16__GPIO3_IO16     0x80000000  /* LED_CAN2          | pin 69  | GPIO 80 */
+        >;
+        };
+    };
+    
+    gprs {
+        pinctrl_gprs: gprsgrp {
+        fsl,pins = <
+            MX6QDL_PAD_SD3_DAT2__GPIO7_IO06    0x80000000  /* Status_GPRS       | pin 131 | GPIO 198 */
+            MX6QDL_PAD_RGMII_RD2__GPIO6_IO28   0x80000000  /* Flight_Mode_GPRS  | pin 127 | GPIO 188 */
+            MX6QDL_PAD_EIM_D23__GPIO3_IO23     0x80000000  /* Power_GPRS        | pin 77  | GPIO 87 */
+            MX6QDL_PAD_EIM_D24__GPIO3_IO24     0x80000000  /* #Reset_GPRS       | pin 73  | GPIO 88 */
+        >;
+        };
+    };
+    
 // shared on LCD port (J12), extension header (J11), and LVDS display (J3), on-board pull-ups
 // 
-//	i2c3 {		/* for LVDS display */
-//		pinctrl_i2c3_5: i2c3grp-5 {
-//			fsl,pins = <
-//				MX6QDL_PAD_GPIO_5__I2C3_SCL 0x4001b8b1
-//				MX6QDL_PAD_GPIO_6__I2C3_SDA 0x4001b8b1
-//			>;
-//		};
-//	};
+//    i2c3 {        /* for LVDS display */
+//        pinctrl_i2c3_5: i2c3grp-5 {
+//            fsl,pins = <
+//                MX6QDL_PAD_GPIO_5__I2C3_SCL 0x4001b8b1
+//                MX6QDL_PAD_GPIO_6__I2C3_SDA 0x4001b8b1
+//            >;
+//        };
+//    };
 
 // shared on J10 and LVDS display (J3)
-//	pwm4 {
-//		pinctrl_pwm4_2: pwm4grp-2 {
-//			fsl,pins = <
-//				MX6QDL_PAD_SD1_CMD__PWM4_OUT 0x1b0b1
-//			>;
-//		};
-//	};
+//    pwm4 {
+//        pinctrl_pwm4_2: pwm4grp-2 {
+//            fsl,pins = <
+//                MX6QDL_PAD_SD1_CMD__PWM4_OUT 0x1b0b1
+//            >;
+//        };
+//    };
 
 };
 
 // part of HDMI (J1)
 &i2c2 {
-	clock-frequency = <100000>;
-	pinctrl-names = "default";
-	pinctrl-0 = <&pinctrl_i2c2_2>;
-	status = "okay";
+    clock-frequency = <100000>;
+    pinctrl-names = "default";
+    pinctrl-0 = <&pinctrl_i2c2_2>;
+    status = "okay";
 
-	hdmi: edid@50 {
-		compatible = "fsl,imx6-hdmi-i2c";
-		reg = <0x50>;
-	};
+    hdmi: edid@50 {
+        compatible = "fsl,imx6-hdmi-i2c";
+        reg = <0x50>;
+    };
 };
 
 &cpu0 {
-	arm-supply = <&reg_arm>;
-	soc-supply = <&reg_soc>;
-	pu-supply = <&reg_pu>; /* use pu_dummy if VDDSOC share with VDDPU */
+    arm-supply = <&reg_arm>;
+    soc-supply = <&reg_soc>;
+    pu-supply = <&reg_pu>; /* use pu_dummy if VDDSOC share with VDDPU */
 };
 
 &gpc {
-	fsl,ldo-bypass = <0>; /* use ldo-bypass, u-boot will check it and configure */
-	fsl,wdog-reset = <1>; /* watchdog select of reset source */
-	pu-supply = <&reg_pu>; /* ldo-bypass:use pu_dummy if VDDSOC share with VDDPU */
+    fsl,ldo-bypass = <0>; /* use ldo-bypass, u-boot will check it and configure */
+    fsl,wdog-reset = <1>; /* watchdog select of reset source */
+    pu-supply = <&reg_pu>; /* ldo-bypass:use pu_dummy if VDDSOC share with VDDPU */
 };
 
 //&gpu {
-//	pu-supply = <&reg_pu>; /* ldo-bypass:use pu_dummy if VDDSOC share with VDDPU */
+//    pu-supply = <&reg_pu>; /* ldo-bypass:use pu_dummy if VDDSOC share with VDDPU */
 //};
 
 //&vpu {
-//	pu-supply = <&reg_pu>; /* ldo-bypass:use pu_dummy if VDDSOC share with VDDPU */
+//    pu-supply = <&reg_pu>; /* ldo-bypass:use pu_dummy if VDDSOC share with VDDPU */
 //};
 
 //&fec {
-//	pinctrl-names = "default";
-//	pinctrl-0 = <&pinctrl_enet_1>;
-//	phy-mode = "rgmii";
-//	status = "okay";
+//    pinctrl-names = "default";
+//    pinctrl-0 = <&pinctrl_enet_1>;
+//    phy-mode = "rgmii";
+//    status = "okay";
 //};
 
 //&hdmi_core {
-//	ipu_id = <1>;
-//	disp_id = <0>;
-//	status = "okay";
+//    ipu_id = <1>;
+//    disp_id = <0>;
+//    status = "okay";
 //};
 
 //&hdmi_video {
-//	fsl,phy_reg_vlev = <0x0294>;
-//	fsl,phy_reg_cksymtx = <0x800d>;
-//	status = "okay";
+//    fsl,phy_reg_vlev = <0x0294>;
+//    fsl,phy_reg_cksymtx = <0x800d>;
+//    status = "okay";
 //};
 
 //&mxcfb1 {
-//	status = "okay";
+//    status = "okay";
 //};
 
 // example for display
 //&ldb {
-//	ipu_id = <1>;
-//	disp_id = <1>;
-//	ext_ref = <1>;
-//	mode = "sep1";
-//	sec_ipu_id = <1>;
-//	sec_disp_id = <0>;
+//    ipu_id = <1>;
+//    disp_id = <1>;
+//    ext_ref = <1>;
+//    mode = "sep1";
+//    sec_ipu_id = <1>;
+//    sec_disp_id = <0>;
 //};
 
 &flexcan1 {
-	pinctrl-names = "default";
-	pinctrl-0 = <&pinctrl_flexcan1_3>;
-	status = "okay";
+    pinctrl-names = "default";
+    pinctrl-0 = <&pinctrl_flexcan1_3>;
+    status = "okay";
 };
 
 &flexcan2 {
-	pinctrl-names = "default";
-	pinctrl-0 = <&pinctrl_flexcan2_1>;
-	status = "okay";
+    pinctrl-names = "default";
+    pinctrl-0 = <&pinctrl_flexcan2_1>;
+    status = "okay";
 };
 
 // example for UART on J11
 &uart1 {
-	pinctrl-names = "default";
-	pinctrl-0 = <&pinctrl_uart1_1>;
-	status = "okay";
+    pinctrl-names = "default";
+    pinctrl-0 = <&pinctrl_uart1_1>;
+    status = "okay";
 };
 
 // this is debug com
 &uart2 {
-	pinctrl-names = "default";
-	pinctrl-0 = <&pinctrl_uart2_1>;
-	status = "okay";
+    pinctrl-names = "default";
+    pinctrl-0 = <&pinctrl_uart2_1>;
+    status = "okay";
 };
 
 // example for UART on J10
 //&uart3 {
-//	pinctrl-names = "default";
-//	pinctrl-0 = <&pinctrl_uart3_2>;
-//	status = "okay";
+//    pinctrl-names = "default";
+//    pinctrl-0 = <&pinctrl_uart3_2>;
+//    status = "okay";
 //};
 
 &uart4 {
-	pinctrl-names = "default";
-	pinctrl-0 = <&pinctrl_uart4_1>;
-	status = "okay";
+    pinctrl-names = "default";
+    pinctrl-0 = <&pinctrl_uart4_1>;
+    status = "okay";
 };
 
 &uart5 {
-	pinctrl-names = "default";
-	pinctrl-0 = <&pinctrl_uart5_1>;
-	status = "okay";
+    pinctrl-names = "default";
+    pinctrl-0 = <&pinctrl_uart5_1>;
+    status = "okay";
 };
 
 
 //&usbh1 {
-//	status = "okay";
+//    status = "okay";
 //};
 
 // micro-SD card J13
 &usdhc2 {
-	pinctrl-names = "default";
-	pinctrl-0 = <&pinctrl_usdhc2_2>;
-	cd-gpios = <&gpio1 4 0>;
-	wp-gpios = <&gpio1 2 0>;
-	status = "okay";
+    pinctrl-names = "default";
+    pinctrl-0 = <&pinctrl_usdhc2_2>;
+    cd-gpios = <&gpio1 4 0>;
+    wp-gpios = <&gpio1 2 0>;
+    status = "okay";
 };
 
 &usdhc4 {
-	pinctrl-names = "default";
-	pinctrl-0 = <&pinctrl_usdhc4_1>;
-	non-removable;
-	status = "okay";
+    pinctrl-names = "default";
+    pinctrl-0 = <&pinctrl_usdhc4_1>;
+    non-removable;
+    status = "okay";
 };
 
 // example for PWM
 //&pwm4 {
-//	pinctrl-names = "default";
-//	pinctrl-0 = <&pinctrl_pwm4_2>;
-//	status = "okay";
+//    pinctrl-names = "default";
+//    pinctrl-0 = <&pinctrl_pwm4_2>;
+//    status = "okay";
 //};
 
 
 //&weim {
-//	pinctrl-names = "default";
-//	pinctrl-0 = <&pinctrl_weim_nor_1 &pinctrl_weim_cs0_1>;
-//	#address-cells = <2>;
-//	#size-cells = <1>;
-//	ranges = <0 0 0x50000000 0x08000000>;
-//	status = "disabled"; /* pin conflict with qspi, nand and lcd1 */
+//    pinctrl-names = "default";
+//    pinctrl-0 = <&pinctrl_weim_nor_1 &pinctrl_weim_cs0_1>;
+//    #address-cells = <2>;
+//    #size-cells = <1>;
+//    ranges = <0 0 0x50000000 0x08000000>;
+//    status = "disabled"; /* pin conflict with qspi, nand and lcd1 */
 //
-//	nor@0,0 {
-//		compatible = "cfi-flash";
-//		reg = <0 0 0x02000000>;
-//		#address-cells = <1>;
-//		#size-cells = <1>;
-//		bank-width = <2>;
-//		fsl,weim-cs-timing = <0x00610081 0x00000001 0x1c022000
-//				0x0000c000 0x1404a38e 0x00000000>;
-//	};
+//    nor@0,0 {
+//        compatible = "cfi-flash";
+//        reg = <0 0 0x02000000>;
+//        #address-cells = <1>;
+//        #size-cells = <1>;
+//        bank-width = <2>;
+//        fsl,weim-cs-timing = <0x00610081 0x00000001 0x1c022000
+//                0x0000c000 0x1404a38e 0x00000000>;
+//    };
 //};
 
 
