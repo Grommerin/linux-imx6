@@ -73,7 +73,7 @@
 #include "chr_flexcan.h"
 
 #define FLEXCAN_DRV_NAME           "flexcan"
-#define FLEXCAN_DRV_VER            "1.3.57"
+#define FLEXCAN_DRV_VER            "1.3.58"
 #else
 #define DRV_NAME			"flexcan"
 #endif
@@ -521,7 +521,9 @@ static inline unsigned int flexcan_c_rbuf_push(const u8 dev_num, const struct fl
     struct flexcan_frame_mb *buf;
 
     if(flexcan_c_rbuf_is_full(dev_num)) {
-        return 1;
+        struct flexcan_frame_mb frame;
+        flexcan_c_rbuf_pop(dev_num, &frame);
+        //CHECKME добавил критическую секцию в одно сообщение при переполнении буфера
     }
 
     buf = (struct flexcan_frame_mb *) (f_buf->buf + f_nbuf->n_push);
@@ -822,6 +824,7 @@ static unsigned int flexcan_c_file_poll(struct file *filp, poll_table *wait)
 static ssize_t flexcan_c_file_read(struct file *filp, char __user *buf, size_t length_read, loff_t *off)
 {
     struct can_frame cf_decoded;
+    struct send_frame sendFrame;
     struct flexcan_frame_mb read_frame;
     char data_msg_buf[CAN_DATA_MSG_LENGTH + 1];
 
@@ -836,36 +839,29 @@ static ssize_t flexcan_c_file_read(struct file *filp, char __user *buf, size_t l
 //    printk("%s.%d: %s\n", f_drv->name, dev_num, __func__);
 
     if(length_read < CAN_DATA_MSG_LENGTH) { /* Проверяем размер буффера пользователя */
-        dev_dbg(&f_cdev->dev, "chardev read return EFAULT\n");
+//        dev_dbg(&f_cdev->dev, "chardev read return EFAULT\n");
         return -EINVAL;
     }
+
     if(down_interruptible(&f_cdev->sem)) {
         return -ERESTARTSYS;
     }
 
-    is_empty = IS_EMPTY;
-    while(is_empty) { /* Проверяем пустой ли буффер */
+    while(IS_EMPTY) { /* Проверяем пустой ли буффер */
         up(&f_cdev->sem); /* release the lock */
         if (filp->f_flags & O_NONBLOCK) {   /* если вызов не блокирующий, вываливаемся */
-            dev_dbg(&f_cdev->dev, "chardev read return EAGAIN\n");
-            printk("%s.%d: %s (filp->f_flags & O_NONBLOCK). return -EAGAIN\n", f_drv->name, dev_num, __func__);
             return -EAGAIN;
         }
         if (wait_event_interruptible(f_cdev->inq, !IS_EMPTY)) {
-            printk("%s.%d: %s wait_event_interruptible. return -ERESTARTSYS\n", f_drv->name, dev_num, __func__);
-//            printk("%s.%d: %s flexcan_c_rbuf_is_empty is %d, flexcan_c_rbuf_get_data_size is %d\n", f_drv->name, dev_num, __func__, flexcan_c_rbuf_is_empty(dev_num), flexcan_c_rbuf_get_data_size(dev_num));
             return -ERESTARTSYS; /* signal: tell the fs layer to handle it */
         }
         if (down_interruptible(&f_cdev->sem)) {
-            printk("%s.%d: %s down_interruptible 2. return -ERESTARTSYS\n", f_drv->name, dev_num, __func__);
             return -ERESTARTSYS;
         }
-        is_empty = IS_EMPTY;
     }
 
     do {
         if(flexcan_c_rbuf_pop(dev_num, &read_frame)) {
-            dev_dbg(&f_cdev->dev, "chardev read err\n");
             break;
         }
 
@@ -873,25 +869,73 @@ static ssize_t flexcan_c_file_read(struct file *filp, char __user *buf, size_t l
         flexcan_c_decode_frame(&cf_decoded, &read_frame.mb);
         memcpy((void*) &msg_data, (void*) cf_decoded.data, cf_decoded.can_dlc);
 
-        ret = snprintf(data_msg_buf, (CAN_DATA_MSG_LENGTH + 1), "$CAN,%d,%08x,%05x,%08x,%d,%016llx\n", dev_num, (unsigned int) read_frame.time.tv_sec,
-            (unsigned int) read_frame.time.tv_usec, cf_decoded.can_id, cf_decoded.can_dlc, msg_data);
-        if(ret != CAN_DATA_MSG_LENGTH) {
-            dev_dbg(&f_cdev->dev, "chardev read error size: need[%d], ret[%d]\n", CAN_DATA_MSG_LENGTH, ret);
-            continue;
-        }
+        sendFrame.time = read_frame.time;
+        sendFrame.can_id = cf_decoded.can_id;
+        sendFrame.can_dlc = cf_decoded.can_dlc;
+        memcpy((void*) &sendFrame.data, (void*) cf_decoded.data, cf_decoded.can_dlc);
 
-        ret = copy_to_user((void *) buf, &data_msg_buf, CAN_DATA_MSG_LENGTH);
+        ret = copy_to_user((void *) buf, (void *) &sendFrame, sizeof(sendFrame));
         if(ret) {
-            dev_dbg(&f_cdev->dev, "chardev read can't copy = %d bytes\n", ret);
-            buf += (CAN_DATA_MSG_LENGTH - ret);
-            total_length += (CAN_DATA_MSG_LENGTH - ret);
+//            dev_dbg(&f_cdev->dev, "chardev read can't copy = %d bytes\n", ret);
+            buf += (sizeof(sendFrame) - ret);
+            total_length += (sizeof(sendFrame) - ret);
             break;
         }
         else {
-            buf += CAN_DATA_MSG_LENGTH;
-            total_length += CAN_DATA_MSG_LENGTH;
+            buf += sizeof(sendFrame);
+            total_length += sizeof(sendFrame);
         }
-    } while(((total_length + CAN_DATA_MSG_LENGTH) <= length_read) && (!IS_EMPTY));
+    } while(((total_length + sizeof(sendFrame)) <= length_read) && (!IS_EMPTY));
+
+// //    is_empty = IS_EMPTY;
+//     while(IS_EMPTY) { /* Проверяем пустой ли буффер */
+//         up(&f_cdev->sem); /* release the lock */
+//         if (filp->f_flags & O_NONBLOCK) {   /* если вызов не блокирующий, вываливаемся */
+// //            dev_dbg(&f_cdev->dev, "chardev read return EAGAIN\n");
+// //            printk("%s.%d: %s (filp->f_flags & O_NONBLOCK). return -EAGAIN\n", f_drv->name, dev_num, __func__);
+//             return -EAGAIN;
+//         }
+//         if (wait_event_interruptible(f_cdev->inq, !IS_EMPTY)) {
+// //            printk("%s.%d: %s wait_event_interruptible. return -ERESTARTSYS\n", f_drv->name, dev_num, __func__);
+// //            printk("%s.%d: %s flexcan_c_rbuf_is_empty is %d, flexcan_c_rbuf_get_data_size is %d\n", f_drv->name, dev_num, __func__, flexcan_c_rbuf_is_empty(dev_num), flexcan_c_rbuf_get_data_size(dev_num));
+//             return -ERESTARTSYS; /* signal: tell the fs layer to handle it */
+//         }
+//         if (down_interruptible(&f_cdev->sem)) {
+// //            printk("%s.%d: %s down_interruptible 2. return -ERESTARTSYS\n", f_drv->name, dev_num, __func__);
+//             return -ERESTARTSYS;
+//         }
+//  //       is_empty = IS_EMPTY;
+//     }
+
+//     do {
+//         if(flexcan_c_rbuf_pop(dev_num, &read_frame)) {
+// //            dev_dbg(&f_cdev->dev, "chardev read err\n");
+//             break;
+//         }
+
+//         msg_data = 0;
+//         flexcan_c_decode_frame(&cf_decoded, &read_frame.mb);
+//         memcpy((void*) &msg_data, (void*) cf_decoded.data, cf_decoded.can_dlc);
+
+//         ret = snprintf(data_msg_buf, (CAN_DATA_MSG_LENGTH + 1), "$CAN,%d,%08x,%05x,%08x,%d,%016llx\n", dev_num, (unsigned int) read_frame.time.tv_sec,
+//             (unsigned int) read_frame.time.tv_usec, cf_decoded.can_id, cf_decoded.can_dlc, msg_data);
+//         if(ret != CAN_DATA_MSG_LENGTH) {
+// //            dev_dbg(&f_cdev->dev, "chardev read error size: need[%d], ret[%d]\n", CAN_DATA_MSG_LENGTH, ret);
+//             continue;
+//         }
+
+//         ret = copy_to_user((void *) buf, &data_msg_buf, CAN_DATA_MSG_LENGTH);
+//         if(ret) {
+// //            dev_dbg(&f_cdev->dev, "chardev read can't copy = %d bytes\n", ret);
+//             buf += (CAN_DATA_MSG_LENGTH - ret);
+//             total_length += (CAN_DATA_MSG_LENGTH - ret);
+//             break;
+//         }
+//         else {
+//             buf += CAN_DATA_MSG_LENGTH;
+//             total_length += CAN_DATA_MSG_LENGTH;
+//         }
+//     } while(((total_length + CAN_DATA_MSG_LENGTH) <= length_read) && (!IS_EMPTY));
 
     up (&f_cdev->sem);
     wake_up_interruptible(&f_cdev->outq);
