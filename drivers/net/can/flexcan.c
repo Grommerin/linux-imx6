@@ -869,6 +869,7 @@ static ssize_t flexcan_c_file_read(struct file *filp, char __user *buf, size_t l
 
         sendFrame.time = read_frame.time;
         sendFrame.can_id = cf_decoded.can_id;
+        sendFrame.can_ch = dev_num;
         sendFrame.can_dlc = cf_decoded.can_dlc;
         memcpy((void*) &sendFrame.data, (void*) cf_decoded.data, cf_decoded.can_dlc);
 

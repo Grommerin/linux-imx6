@@ -110,10 +110,10 @@ struct can_frame {
 struct send_frame {
 	struct timeval time;
 	canid_t can_id;  /* 32 bit CAN_ID + EFF/RTR/ERR flags */
+	__u8    can_ch; /* data length code: 0 .. 8 */
 	__u8    can_dlc; /* data length code: 0 .. 8 */
 	__u8    data[8] __attribute__((aligned(8)));
 };
-
 
 /**
  * struct can_filter - CAN ID based filter in can_register().
