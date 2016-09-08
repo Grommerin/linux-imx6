@@ -33,6 +33,7 @@
 /* controller area network (CAN) kernel definitions */
 
 /* fixed length of message with CAN data */
+// #define CAN_DATA_MSG_LENGTH         (50)
 #define CAN_DATA_MSG_LENGTH         (50)
 
 /* first char in CAN message */
@@ -104,6 +105,15 @@ struct can_frame {
 	__u8    can_dlc; /* data length code: 0 .. 8 */
 	__u8    data[8] __attribute__((aligned(8)));
 };
+
+
+struct send_frame {
+	struct timeval time;
+	canid_t can_id;  /* 32 bit CAN_ID + EFF/RTR/ERR flags */
+	__u8    can_dlc; /* data length code: 0 .. 8 */
+	__u8    data[8] __attribute__((aligned(8)));
+};
+
 
 /**
  * struct can_filter - CAN ID based filter in can_register().

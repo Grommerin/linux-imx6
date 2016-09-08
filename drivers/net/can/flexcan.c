@@ -514,6 +514,22 @@ static inline unsigned int flexcan_c_rbuf_is_full(const u8 dev_num)
 }
 
 
+static inline unsigned int flexcan_c_rbuf_pop(const u8 dev_num, struct flexcan_frame_mb *s_frame)
+{
+    struct flexcan_c_brecv *f_buf = &f_brecv[dev_num];
+    flexcan_nbuf_t *f_nbuf = &(f_buf->nbuf);
+
+    if(flexcan_c_rbuf_is_empty(dev_num))  {
+        return 1;
+    }
+
+    *(struct flexcan_frame_mb *) s_frame = *(struct flexcan_frame_mb *) (f_buf->buf + f_nbuf->n_pop);
+    f_nbuf->n_pop = (f_nbuf->n_pop + 1) & FLEXCAN_BUF_RECV_MASK;
+    f_nbuf->n_save_pop = f_nbuf->n_pop;
+
+    return 0;
+}
+
 static inline unsigned int flexcan_c_rbuf_push(const u8 dev_num, const struct flexcan_mb *s_mb, const struct timeval *s_tv)
 {
     struct flexcan_c_brecv *f_buf = &f_brecv[dev_num];
@@ -533,24 +549,6 @@ static inline unsigned int flexcan_c_rbuf_push(const u8 dev_num, const struct fl
 
     return 0;
 }
-
-
-static inline unsigned int flexcan_c_rbuf_pop(const u8 dev_num, struct flexcan_frame_mb *s_frame)
-{
-    struct flexcan_c_brecv *f_buf = &f_brecv[dev_num];
-    flexcan_nbuf_t *f_nbuf = &(f_buf->nbuf);
-
-    if(flexcan_c_rbuf_is_empty(dev_num))  {
-        return 1;
-    }
-
-    *(struct flexcan_frame_mb *) s_frame = *(struct flexcan_frame_mb *) (f_buf->buf + f_nbuf->n_pop);
-    f_nbuf->n_pop = (f_nbuf->n_pop + 1) & FLEXCAN_BUF_RECV_MASK;
-    f_nbuf->n_save_pop = f_nbuf->n_pop;
-
-    return 0;
-}
-
 
 static inline unsigned int flexcan_c_rbuf_free_space(const u8 dev_num)
 {
@@ -874,18 +872,18 @@ static ssize_t flexcan_c_file_read(struct file *filp, char __user *buf, size_t l
         sendFrame.can_dlc = cf_decoded.can_dlc;
         memcpy((void*) &sendFrame.data, (void*) cf_decoded.data, cf_decoded.can_dlc);
 
-        ret = copy_to_user((void *) buf, (void *) &sendFrame, sizeof(sendFrame));
+        ret = copy_to_user((void *) buf, (void *) &sendFrame, sizeof(struct send_frame));
         if(ret) {
 //            dev_dbg(&f_cdev->dev, "chardev read can't copy = %d bytes\n", ret);
-            buf += (sizeof(sendFrame) - ret);
-            total_length += (sizeof(sendFrame) - ret);
+            buf += (sizeof(struct send_frame) - ret);
+            total_length += (sizeof(struct send_frame) - ret);
             break;
         }
         else {
-            buf += sizeof(sendFrame);
-            total_length += sizeof(sendFrame);
+            buf += sizeof(struct send_frame);
+            total_length += sizeof(struct send_frame);
         }
-    } while(((total_length + sizeof(sendFrame)) <= length_read) && (!IS_EMPTY));
+    } while(((total_length + sizeof(struct send_frame)) <= length_read) && (!IS_EMPTY));
 
 // //    is_empty = IS_EMPTY;
 //     while(IS_EMPTY) { /* Проверяем пустой ли буффер */
