@@ -73,7 +73,7 @@
 #include "chr_flexcan.h"
 
 #define FLEXCAN_DRV_NAME           "flexcan"
-#define FLEXCAN_DRV_VER            "1.3.58"
+#define FLEXCAN_DRV_VER            "1.3.59"
 #else
 #define DRV_NAME			"flexcan"
 #endif
@@ -873,9 +873,10 @@ static ssize_t flexcan_c_file_read(struct file *filp, char __user *buf, size_t l
         sendFrame.can_dlc = cf_decoded.can_dlc;
         memcpy((void*) &sendFrame.data, (void*) cf_decoded.data, cf_decoded.can_dlc);
 
-        ret = copy_to_user((void *) buf, (void *) &sendFrame, sizeof(struct send_frame));
+        ret = copy_to_user((void*) buf, (void*) &sendFrame, sizeof(struct send_frame));
         if(ret) {
-//            dev_dbg(&f_cdev->dev, "chardev read can't copy = %d bytes\n", ret);
+        //    dev_dbg(&f_cdev->dev, "chardev read can't copy = %d bytes\n", ret);
+            printk("%s.%d: %s chardev read can't copy = %d bytes\n", f_drv->name, dev_num, __func__, ret);
             buf += (sizeof(struct send_frame) - ret);
             total_length += (sizeof(struct send_frame) - ret);
             break;
@@ -1623,7 +1624,12 @@ static irqreturn_t flexcan_irq(int irq, void *dev_id)
         }
         stats->int_rx_frame++;
 
-        gpio_set_value(f_cdev->gpio_led, 1);
+        if(gpio_get_value(f_cdev->gpio_led) == 0) {
+            gpio_set_value(f_cdev->gpio_led, 1);
+        }
+        else {
+            gpio_set_value(f_cdev->gpio_led, 0);
+        }
 
         read_frames = 0;
         while((read_frames < 10) && (reg_iflag1 & FLEXCAN_IFLAG_RX_FIFO_AVAILABLE)) {
@@ -1686,7 +1692,6 @@ static irqreturn_t flexcan_irq(int irq, void *dev_id)
             kill_fasync(&(f_cdev->async_queue), SIGIO, POLL_IN);
         }
     }
-    gpio_set_value(f_cdev->gpio_led, 0);
 
     return IRQ_HANDLED;
 }
