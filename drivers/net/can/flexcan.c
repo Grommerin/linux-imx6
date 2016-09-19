@@ -73,7 +73,7 @@
 #include "chr_flexcan.h"
 
 #define FLEXCAN_DRV_NAME           "flexcan"
-#define FLEXCAN_DRV_VER            "1.3.59"
+#define FLEXCAN_DRV_VER            "1.3.60"
 #else
 #define DRV_NAME			"flexcan"
 #endif
@@ -317,6 +317,7 @@ struct flexcan_c_device {
 #endif
 
     u8 irq_num;                 /* Номер вектора прерывания IRQ для устройства */
+    u8 gpio_state;
     struct cdev chrdev;        /* Структура символьного утсройства */
     struct device dev;         /* Структура утсройства */
 
@@ -867,11 +868,12 @@ static ssize_t flexcan_c_file_read(struct file *filp, char __user *buf, size_t l
         flexcan_c_decode_frame(&cf_decoded, &read_frame.mb);
         memcpy((void*) &msg_data, (void*) cf_decoded.data, cf_decoded.can_dlc);
 
-        sendFrame.time = read_frame.time;
+        sendFrame.t_sec = read_frame.time.tv_sec;
+        sendFrame.t_usec = read_frame.time.tv_usec;
         sendFrame.can_id = cf_decoded.can_id;
         sendFrame.can_ch = dev_num;
         sendFrame.can_dlc = cf_decoded.can_dlc;
-        memcpy((void*) &sendFrame.data, (void*) cf_decoded.data, cf_decoded.can_dlc);
+        memcpy((void*) &sendFrame.data, (void*) cf_decoded.data, 8);
 
         ret = copy_to_user((void*) buf, (void*) &sendFrame, sizeof(struct send_frame));
         if(ret) {
@@ -1602,6 +1604,8 @@ static irqreturn_t flexcan_irq(int irq, void *dev_id)
     u32 reg_iflag1, reg_esr;
     u32 read_frames = 0;
 
+    gpio_set_value(f_cdev->gpio_led, 1);
+
     // flexcan_transceiver_switch(f_cdev->pdata, 1);
     reg_iflag1 = flexcan_read(&regs->iflag1);
     reg_esr = flexcan_read(&regs->esr);
@@ -1624,12 +1628,14 @@ static irqreturn_t flexcan_irq(int irq, void *dev_id)
         }
         stats->int_rx_frame++;
 
-        if(gpio_get_value(f_cdev->gpio_led) == 0) {
-            gpio_set_value(f_cdev->gpio_led, 1);
-        }
-        else {
-            gpio_set_value(f_cdev->gpio_led, 0);
-        }
+//        if(f_cdev->gpio_state == 0) {
+//            gpio_set_value(f_cdev->gpio_led, 1);
+//            f_cdev->gpio_state = 1;
+//        }
+//        else {
+//            gpio_set_value(f_cdev->gpio_led, 0);
+//            f_cdev->gpio_state = 0;
+//        }
 
         read_frames = 0;
         while((read_frames < 10) && (reg_iflag1 & FLEXCAN_IFLAG_RX_FIFO_AVAILABLE)) {
@@ -1692,6 +1698,8 @@ static irqreturn_t flexcan_irq(int irq, void *dev_id)
             kill_fasync(&(f_cdev->async_queue), SIGIO, POLL_IN);
         }
     }
+
+    gpio_set_value(f_cdev->gpio_led, 0);
 
     return IRQ_HANDLED;
 }
@@ -2550,6 +2558,9 @@ static int flexcan_probe(struct platform_device *pdev)
     f_cdev->clk_per = clk_per;
     f_cdev->pdata = pdev->dev.platform_data;
     f_cdev->gpio_led = flexcan_gpio_num[dev_num];
+    f_cdev->gpio_state = 1;
+    gpio_set_value(f_cdev->gpio_led, 1);
+
 
     if(flexcan_c_is_init() == 0) {
         err = alloc_chrdev_region(&f_drv->devt, FLEXCAN_DEV_FIRST, FLEXCAN_DEV_COUNT, f_drv->name);
@@ -2597,6 +2608,9 @@ static int flexcan_probe(struct platform_device *pdev)
 
     flexcan_open(dev_num);
 
+    f_cdev->gpio_state = 0;
+    gpio_set_value(f_cdev->gpio_led, 0);
+
     return 0;
 
  failed_device_create:
@@ -2640,6 +2654,8 @@ static int flexcan_remove(struct platform_device *pdev)
     }
     f_cdev = &f_chrdev[dev_num];
 
+    f_cdev->gpio_state = 0;
+    gpio_set_value(f_cdev->gpio_led, 0);
     gpio_unexport(f_cdev->gpio_led);
     gpio_free(f_cdev->gpio_led);
 //    printk("%s driver %s func: dev_num %d start\n", FLEXCAN_DRV_NAME, __FUNCTION__, dev_num);
