@@ -1214,6 +1214,7 @@ static void gsm_control_message(struct gsm_mux *gsm, unsigned int command,
 		if (dlci) {
 			dlci->dead = 1;
 			gsm->dead = 1;
+			printk("n_gsm %s() dead=1\n", __FUNCTION__);
 			gsm_dlci_begin_close(dlci);
 		}
 		}
@@ -1432,8 +1433,10 @@ static void gsm_dlci_close(struct gsm_dlci *dlci)
 	if (dlci->addr != 0) {
 		tty_port_tty_hangup(&dlci->port, false);
 		kfifo_reset(dlci->fifo);
-	} else
+	} else {
 		dlci->gsm->dead = 1;
+		printk("n_gsm %s() dead=1\n", __FUNCTION__);
+	}
 	wake_up(&dlci->gsm->event);
 	/* A DLCI 0 close is a MUX termination so we need to kick that
 	   back to userspace somehow */
@@ -2037,6 +2040,7 @@ static void gsm_cleanup_mux(struct gsm_mux *gsm)
 
 	printk("n_gsm %s() start, num=%d\n", __FUNCTION__, gsm->num);
 	gsm->dead = 1;
+	printk("n_gsm %s() dead=1\n", __FUNCTION__);
 
 	spin_lock(&gsm_mux_lock);
 	for (i = 0; i < MAX_MUX; i++) {
@@ -2061,6 +2065,7 @@ static void gsm_cleanup_mux(struct gsm_mux *gsm)
 	/* Now we are sure T2 has stopped */
 	if (dlci) {
 		dlci->dead = 1;
+		printk("n_gsm %s() dlci->dead=1\n", __FUNCTION__);
 		gsm_dlci_begin_close(dlci);
 		wait_event_interruptible(gsm->event,
 					dlci->state == DLCI_CLOSED);
@@ -2201,6 +2206,7 @@ static struct gsm_mux *gsm_alloc_mux(void)
 	gsm->mru = 64;	/* Default to encoding 1 so these should be 64 */
 	gsm->mtu = 64;
 	gsm->dead = 1;	/* Avoid early tty opens */
+	printk("n_gsm %s() dead=1\n", __FUNCTION__);
 
 	return gsm;
 }
