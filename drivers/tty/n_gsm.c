@@ -2277,6 +2277,7 @@ static void gsmld_receive_buf(struct tty_struct *tty, const unsigned char *cp,
 	const unsigned char *dp;
 	char *f;
 	int i;
+	char buf[64];
 	char flags = TTY_NORMAL;
 
 	if (debug & 4)
