@@ -2035,6 +2035,7 @@ static void gsm_cleanup_mux(struct gsm_mux *gsm)
 	struct gsm_msg *txq, *ntxq;
 	struct gsm_control *gc;
 
+	printk("n_gsm %s() start, num=%d\n", __FUNCTION__, gsm->num);
 	gsm->dead = 1;
 
 	spin_lock(&gsm_mux_lock);
@@ -2091,7 +2092,7 @@ static int gsm_activate_mux(struct gsm_mux *gsm)
 	struct gsm_dlci *dlci;
 	int i = 0;
 
-	printk("n_gsm %s()\n", __FUNCTION__);
+	printk("n_gsm %s() start, num=%d\n", __FUNCTION__, gsm->num);
 
 	setup_timer(&gsm->t2_timer, gsm_control_retransmit, (unsigned long)gsm);
 	init_waitqueue_head(&gsm->event);
@@ -2109,17 +2110,23 @@ static int gsm_activate_mux(struct gsm_mux *gsm)
 		if (gsm_mux[i] == NULL) {
 			gsm->num = i;
 			gsm_mux[i] = gsm;
+			printk("n_gsm %s() break at %d\n", __FUNCTION__, i);
 			break;
 		}
 	}
 	spin_unlock(&gsm_mux_lock);
-	if (i == MAX_MUX)
-		return -EBUSY;
+	if (i == MAX_MUX) {
+        printk("n_gsm %s() EBUSY\n", __FUNCTION__);
+        return -EBUSY;
+	}
 
 	dlci = gsm_dlci_alloc(gsm, 0);
-	if (dlci == NULL)
-		return -ENOMEM;
+	if (dlci == NULL) {
+        printk("n_gsm %s() ENOMEM\n", __FUNCTION__);
+        return -ENOMEM;
+	}
 	gsm->dead = 0;		/* Tty opens are now permissible */
+	printk("n_gsm %s() dead=0\n", __FUNCTION__);
 	return 0;
 }
 
@@ -2238,7 +2245,9 @@ static int gsmld_attach_gsm(struct tty_struct *tty, struct gsm_mux *gsm)
 	gsm->tty = tty_kref_get(tty);
 	gsm->output = gsmld_output;
 	ret =  gsm_activate_mux(gsm);
+
 	printk("n_gsm %s() ret=%d, gsm->num=%d, base=%#08x\n", __FUNCTION__, ret, gsm->num, base);
+
 	if (ret != 0)
 		tty_kref_put(gsm->tty);
 	else {
@@ -2264,6 +2273,8 @@ static void gsmld_detach_gsm(struct tty_struct *tty, struct gsm_mux *gsm)
 {
 	int i;
 	int base = gsm->num << 6; /* Base for this MUX */
+
+	printk("n_gsm %s() start, num=%d\n", __FUNCTION__, gsm->num);
 
 	WARN_ON(tty != gsm->tty);
 	for (i = 1; i < NUM_DLCI; i++)
@@ -2374,13 +2385,19 @@ static int gsmld_open(struct tty_struct *tty)
 	struct gsm_mux *gsm;
 	int ret;
 
-	if (tty->ops->write == NULL)
+	printk("n_gsm %s() start\n", __FUNCTION__);
+
+	if (tty->ops->write == NULL) {
+	    printk("n_gsm %s() EINVAL\n", __FUNCTION__);
 		return -EINVAL;
+	}
 
 	/* Attach our ldisc data */
 	gsm = gsm_alloc_mux();
-	if (gsm == NULL)
+	if (gsm == NULL) {
+	    printk("n_gsm %s() ENOMEM\n", __FUNCTION__);
 		return -ENOMEM;
+	}
 
 	tty->disc_data = gsm;
 	tty->receive_room = 65536;
@@ -2388,6 +2405,7 @@ static int gsmld_open(struct tty_struct *tty)
 	/* Attach the initial passive connection */
 
     ret = gsmld_attach_gsm(tty, gsm);
+    printk("n_gsm %s() attach ret %d\n", __FUNCTION__, ret);
     if (ret != 0) {
         gsm_cleanup_mux(gsm);
         mux_put(gsm);
@@ -2501,6 +2519,8 @@ static int gsmld_config(struct tty_struct *tty, struct gsm_mux *gsm,
 	int need_close = 0;
 	int need_restart = 0;
 
+	printk("n_gsm %s() start, num=%d\n", __FUNCTION__, gsm->num);
+
 	/* Stuff we don't support yet - UI or I frame transport, windowing */
 	if ((c->adaption != 1 && c->adaption != 2) || c->k)
 		return -EOPNOTSUPP;
@@ -2542,15 +2562,20 @@ static int gsmld_config(struct tty_struct *tty, struct gsm_mux *gsm,
 	 */
 
 	if (need_close || need_restart) {
+	    printk("n_gsm %s() need close\n", __FUNCTION__);
 		gsm_dlci_begin_close(gsm->dlci[0]);
 		/* This will timeout if the link is down due to N2 expiring */
 		wait_event_interruptible(gsm->event,
 				gsm->dlci[0]->state == DLCI_CLOSED);
-		if (signal_pending(current))
-			return -EINTR;
+		if (signal_pending(current)) {
+		    printk("n_gsm %s() EINTR\n", __FUNCTION__);
+		    return -EINTR;
+		}
 	}
-	if (need_restart)
+	if (need_restart) {
+	    printk("n_gsm %s() need restart\n", __FUNCTION__);
 		gsm_cleanup_mux(gsm);
+	}
 
 	gsm->initiator = c->initiator;
 	gsm->mru = c->mru;
@@ -2910,18 +2935,28 @@ static int gsmtty_install(struct tty_driver *driver, struct tty_struct *tty)
 	bool alloc = false;
 	int ret;
 
+	printk("n_gsm %s() start, line=%d, mux=%d\n", __FUNCTION__, line, mux);
+
 	line = line & 0x3F;
 
-	if (mux >= MAX_MUX)
+	if (mux >= MAX_MUX) {
+	    printk("n_gsm %s() ENXIO\n", __FUNCTION__);
 		return -ENXIO;
+	}
 	/* FIXME: we need to lock gsm_mux for lifetimes of ttys eventually */
-	if (gsm_mux[mux] == NULL)
+	if (gsm_mux[mux] == NULL) {
+	    printk("n_gsm %s() EUNATCH\n", __FUNCTION__);
 		return -EUNATCH;
-	if (line == 0 || line > 61)	/* 62/63 reserved */
+	}
+	if (line == 0 || line > 61)	{ /* 62/63 reserved */
+	    printk("n_gsm %s() ECHRNG\n", __FUNCTION__);
 		return -ECHRNG;
+	}
 	gsm = gsm_mux[mux];
-	if (gsm->dead)
+	if (gsm->dead) {
+	    printk("n_gsm %s() EL2HLT\n", __FUNCTION__);
 		return -EL2HLT;
+	}
     /* If DLCI 0 is not yet fully open return an error.
     This is ok from a locking
     perspective as we don't have to worry about this
