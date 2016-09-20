@@ -2298,7 +2298,7 @@ static void gsmld_receive_buf(struct tty_struct *tty, const unsigned char *cp,
 			break;
 		default:
 			WARN_ONCE(1, "%s: unknown flag %d\n",
-			                tty_name(tty), flags);
+			                tty_name(tty, buf), flags);
 			break;
 		}
 	}
@@ -2679,7 +2679,7 @@ static int gsm_mux_net_start_xmit(struct sk_buff *skb,
 	STATS(net).tx_bytes += skb->len;
 	gsm_dlci_data_kick(dlci);
 	/* And tell the kernel when the last transmit started. */
-	netif_trans_update(net);
+	net->trans_start = jiffies;
 	muxnet_put(mux_net);
 	return NETDEV_TX_OK;
 }
@@ -2964,7 +2964,7 @@ static int gsmtty_open(struct tty_struct *tty, struct file *filp)
 	dlci->modem_rx = 0;
 	/* We could in theory open and close before we wait - eg if we get
 	   a DM straight back. This is ok as that will have caused a hangup */
-	tty_port_set_initialized(port, 1);
+	set_bit(ASYNCB_INITIALIZED, &port->flags);
 	/* Start sending off SABM messages */
 	gsm_dlci_begin_open(dlci);
 	/* And wait for virtual carrier */
@@ -2987,8 +2987,10 @@ static void gsmtty_close(struct tty_struct *tty, struct file *filp)
 	if (tty_port_close_start(&dlci->port, tty, filp) == 0)
 		return;
 	gsm_dlci_begin_close(dlci);
-	if (tty_port_initialized(&dlci->port) && C_HUPCL(tty))
-        tty_port_lower_dtr_rts(&dlci->port);
+    if (test_bit(ASYNCB_INITIALIZED, &dlci->port.flags)) {
+        if (C_HUPCL(tty))
+            tty_port_lower_dtr_rts(&dlci->port);
+    }
 	tty_port_close_end(&dlci->port, tty);
 	tty_port_tty_set(&dlci->port, NULL);
 	return;
