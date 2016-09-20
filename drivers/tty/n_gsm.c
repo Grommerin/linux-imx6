@@ -2091,6 +2091,8 @@ static int gsm_activate_mux(struct gsm_mux *gsm)
 	struct gsm_dlci *dlci;
 	int i = 0;
 
+	printk("n_gsm %s()\n", __FUNCTION__);
+
 	setup_timer(&gsm->t2_timer, gsm_control_retransmit, (unsigned long)gsm);
 	init_waitqueue_head(&gsm->event);
 	spin_lock_init(&gsm->control_lock);
@@ -2236,6 +2238,7 @@ static int gsmld_attach_gsm(struct tty_struct *tty, struct gsm_mux *gsm)
 	gsm->tty = tty_kref_get(tty);
 	gsm->output = gsmld_output;
 	ret =  gsm_activate_mux(gsm);
+	printk("n_gsm %s() ret=%d, gsm->num=%d, base=%#08x\n", __FUNCTION__, ret, gsm->num, base);
 	if (ret != 0)
 		tty_kref_put(gsm->tty);
 	else {
