@@ -1483,16 +1483,20 @@ static void gsm_dlci_t1(unsigned long data)
 		if (dlci->retries) {
 			gsm_command(dlci->gsm, dlci->addr, SABM|PF);
 			mod_timer(&dlci->t1, jiffies + gsm->t1 * HZ / 100);
-		} else
+		} else {
+		    printk("n_gsm %s() call close\n", __FUNCTION__);
 			gsm_dlci_close(dlci);
+		}
 		break;
 	case DLCI_CLOSING:
 		dlci->retries--;
 		if (dlci->retries) {
 			gsm_command(dlci->gsm, dlci->addr, DISC|PF);
 			mod_timer(&dlci->t1, jiffies + gsm->t1 * HZ / 100);
-		} else
+		} else {
+		    printk("n_gsm %s() call close\n", __FUNCTION__);
 			gsm_dlci_close(dlci);
+		}
 		break;
 	}
 }
@@ -1800,6 +1804,7 @@ static void gsm_queue(struct gsm_mux *gsm)
 		}
 		/* Real close complete */
 		gsm_response(gsm, address, UA);
+		printk("n_gsm %s() call close DISC|PF\n", __FUNCTION__);
 		gsm_dlci_close(dlci);
 		break;
 	case UA:
@@ -1808,6 +1813,7 @@ static void gsm_queue(struct gsm_mux *gsm)
 			break;
 		switch (dlci->state) {
 		case DLCI_CLOSING:
+		    printk("n_gsm %s() call close CLOSING\n", __FUNCTION__);
 			gsm_dlci_close(dlci);
 			break;
 		case DLCI_OPENING:
@@ -1821,6 +1827,7 @@ static void gsm_queue(struct gsm_mux *gsm)
 			goto invalid;
 		if (dlci == NULL)
 			return;
+		printk("n_gsm %s() call clos DM|PFe\n", __FUNCTION__);
 		gsm_dlci_close(dlci);
 		break;
 	case UI:
