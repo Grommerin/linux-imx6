@@ -1484,7 +1484,7 @@ static void gsm_dlci_t1(unsigned long data)
 			gsm_command(dlci->gsm, dlci->addr, SABM|PF);
 			mod_timer(&dlci->t1, jiffies + gsm->t1 * HZ / 100);
 		} else {
-		    printk("n_gsm %s() call close\n", __FUNCTION__);
+		    printk("n_gsm %s() call close OPENING\n", __FUNCTION__);
 			gsm_dlci_close(dlci);
 		}
 		break;
@@ -1494,7 +1494,7 @@ static void gsm_dlci_t1(unsigned long data)
 			gsm_command(dlci->gsm, dlci->addr, DISC|PF);
 			mod_timer(&dlci->t1, jiffies + gsm->t1 * HZ / 100);
 		} else {
-		    printk("n_gsm %s() call close\n", __FUNCTION__);
+		    printk("n_gsm %s() call close CLOSING\n", __FUNCTION__);
 			gsm_dlci_close(dlci);
 		}
 		break;
