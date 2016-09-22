@@ -2267,8 +2267,8 @@ static int gsmld_attach_gsm(struct tty_struct *tty, struct gsm_mux *gsm)
 		/* Don't register device 0 - this is the control channel and not
 		   a usable tty interface */
 	    base = gsm->num << 6; /* Base for this MUX */
-		for (i = 1; i < NUM_DLCI; i++)
-			tty_register_device(gsm_tty_driver, base + i, NULL);
+//		for (i = 1; i < NUM_DLCI; i++)
+//			tty_register_device(gsm_tty_driver, base + i, NULL);
 	}
 	return ret;
 }
@@ -2290,8 +2290,8 @@ static void gsmld_detach_gsm(struct tty_struct *tty, struct gsm_mux *gsm)
 	printk("n_gsm %s() start, num=%d\n", __FUNCTION__, gsm->num);
 
 	WARN_ON(tty != gsm->tty);
-	for (i = 1; i < NUM_DLCI; i++)
-		tty_unregister_device(gsm_tty_driver, base + i);
+//	for (i = 1; i < NUM_DLCI; i++)
+//		tty_unregister_device(gsm_tty_driver, base + i);
 	gsm_cleanup_mux(gsm);
 	tty_kref_put(gsm->tty);
 	gsm->tty = NULL;
