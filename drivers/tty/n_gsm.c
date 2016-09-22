@@ -276,6 +276,7 @@ struct gsm_mux {
 #define MAX_MUX		4			/* 256 minors */
 static struct gsm_mux *gsm_mux[MAX_MUX];	/* GSM muxes */
 static spinlock_t gsm_mux_lock;
+static struct class *dev_class = NULL;
 
 static struct tty_driver *gsm_tty_driver;
 
@@ -3257,6 +3258,8 @@ static const struct tty_operations gsmtty_ops = {
 
 static int __init gsm_init(void)
 {
+    int i, result;
+
 	/* Fill in our line protocol discipline, and register it */
 	int status = tty_register_ldisc(N_GSM0710, &tty_ldisc_packet);
 	if (status != 0) {
@@ -3292,6 +3295,22 @@ static int __init gsm_init(void)
 		pr_err("gsm_init: tty registration failed.\n");
 		return -EBUSY;
 	}
+
+    /* Add by guowenxue */
+    dev_class = class_create(THIS_MODULE, gsm_tty_driver->name);
+    if(IS_ERR(dev_class)) {
+        printk("%s driver create class failture\n", gsm_tty_driver->name);
+        result =  -ENOMEM;
+        tty_unregister_driver(gsm_tty_driver);
+        put_tty_driver(gsm_tty_driver);
+        return result;
+    }
+
+    for(i=gsm_tty_driver->minor_start; i<MAX_MUX; i++) {
+        device_create(dev_class, NULL, MKDEV(gsm_tty_driver->major, i), NULL, "%s%u", gsm_tty_driver->name, i);
+    }
+    /* Add by guowenxue end */
+
 	pr_debug("gsm_init: loaded as %d,%d.\n",
 			gsm_tty_driver->major, gsm_tty_driver->minor_start);
 	return 0;
@@ -3300,9 +3319,19 @@ static int __init gsm_init(void)
 static void __exit gsm_exit(void)
 {
 	int status = tty_unregister_ldisc(N_GSM0710);
+	int i;
+
 	if (status != 0)
 		pr_err("n_gsm: can't unregister line discipline (err = %d)\n",
 								status);
+    /* Add by guowenxue  */
+    for(i=gsm_tty_driver->minor_start; i<MAX_MUX; i++)
+    {
+        device_destroy(dev_class, MKDEV(gsm_tty_driver->major, i));
+    }
+    class_destroy(dev_class);
+    /* Add end */
+
 	tty_unregister_driver(gsm_tty_driver);
 	put_tty_driver(gsm_tty_driver);
 }
