@@ -282,9 +282,9 @@
 };
 
 
-//&usbh1 {
-//    status = "okay";
-//};
+&usbh1 {
+    status = "okay";
+};
 
 // micro-SD card J13
 &usdhc2 {
