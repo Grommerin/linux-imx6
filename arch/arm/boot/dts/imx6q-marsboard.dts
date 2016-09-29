@@ -3,14 +3,14 @@
 #include "imx6q-marsboard.dtsi"
 
 / {
-  	model = "Marsboard i.MX6 Dual Board";
+	model = "Marsboard i.MX6 Dual Board";
 	compatible = "embest,imx6q-marsboard", "fsl,imx6q";
-	//aliases {
-	//	mxcfb0 = &mxcfb1;
-	//	mxcfb1 = &mxcfb2;
-	//	mxcfb2 = &mxcfb3;
-	//	mxcfb3 = &mxcfb4;
-	//};
+//	aliases {
+//		mxcfb0 = &mxcfb1;
+//		mxcfb1 = &mxcfb2;
+//		mxcfb2 = &mxcfb3;
+//		mxcfb3 = &mxcfb4;
+//	};
 
 	memory {
 		reg = <0x10000000 0x40000000>;
@@ -26,70 +26,70 @@
 //			gpios = <&gpio5 2 GPIO_ACTIVE_LOW>;
 //		};
 //		wifi_led {
-//		      label = "WiFi Activity";
-//		      gpios = <&gpio1 7 GPIO_ACTIVE_HIGH>;
-//		      default-state = "off";
+//			label = "WiFi Activity";
+//			gpios = <&gpio1 7 GPIO_ACTIVE_HIGH>;
+//			default-state = "off";
 //		};
 //		work_led {
-//		      label = "Power/Work Activity";
-//		      gpios = <&gpio4 9 GPIO_ACTIVE_HIGH>;
-//		      default-state = "on";
+//			label = "Power/Work Activity";
+//			gpios = <&gpio4 9 GPIO_ACTIVE_HIGH>;
+//			default-state = "on";
 //		};
 //		can0_led {
-//		      label = "CAN0 Activity";
-//		      gpios = <&gpio5 24 GPIO_ACTIVE_HIGH>;
-//		      default-state = "off";
+//			label = "CAN0 Activity";
+//			gpios = <&gpio5 24 GPIO_ACTIVE_HIGH>;
+//			default-state = "off";
 //		};
 //		can1_led {
-//		      label = "CAN1 Activity";
-//                gpios = <&gpio5 25 GPIO_ACTIVE_HIGH>;
-//                default-state = "off";
-//          };
+//			label = "CAN1 Activity";
+//			gpios = <&gpio5 25 GPIO_ACTIVE_HIGH>;
+//			default-state = "off";
+//		};
 	};
 	
-	//mxcfb1: fb@0 {
-	//	compatible = "fsl,mxc_sdc_fb";
-	//	disp_dev = "hdmi";
-	//	interface_pix_fmt = "RGB24";
-	//	mode_str ="1280x720M@60";
-	//	default_bpp = <32>;
-	//	int_clk = <0>;
-	//	late_init = <0>;
-	//	status = "okay";
-	//};
+//	mxcfb1: fb@0 {
+//		compatible = "fsl,mxc_sdc_fb";
+//		disp_dev = "hdmi";
+//		interface_pix_fmt = "RGB24";
+//		mode_str ="1280x720M@60";
+//		default_bpp = <32>;
+//		int_clk = <0>;
+//		late_init = <0>;
+//		status = "okay";
+//	};
 
-	//mxcfb2: fb@1 {
-	//	compatible = "fsl,mxc_sdc_fb";
-	//	disp_dev = "ldb";
-	//	interface_pix_fmt = "RGB666";
-	//	mode_str ="LDB-XGA";
-	//	default_bpp = <16>;
-	//	int_clk = <0>;
-	//	late_init = <0>;
-	//	status = "disabled";
-	//};
+//	mxcfb2: fb@1 {
+//		compatible = "fsl,mxc_sdc_fb";
+//		disp_dev = "ldb";
+//		interface_pix_fmt = "RGB666";
+//		mode_str ="LDB-XGA";
+//		default_bpp = <16>;
+//		int_clk = <0>;
+//		late_init = <0>;
+//		status = "disabled";
+//	};
 
-	//mxcfb3: fb@2 {
-	//	compatible = "fsl,mxc_sdc_fb";
-	//	disp_dev = "lcd";
-	//	interface_pix_fmt = "RGB565";
-	//	mode_str ="CLAA-WVGA";
-	//	default_bpp = <16>;
-	//	int_clk = <0>;
-	//	late_init = <0>;
-	//	status = "disabled";
-	//};
+//	mxcfb3: fb@2 {
+//		compatible = "fsl,mxc_sdc_fb";
+//		disp_dev = "lcd";
+//		interface_pix_fmt = "RGB565";
+//		mode_str ="CLAA-WVGA";
+//		default_bpp = <16>;
+//		int_clk = <0>;
+//		late_init = <0>;
+//		status = "disabled";
+//	};
 
-	//mxcfb4: fb@3 {
-	//	compatible = "fsl,mxc_sdc_fb";
-	//	disp_dev = "ldb";
-	//	interface_pix_fmt = "RGB666";
-	//	mode_str ="LDB-XGA";
-	//	default_bpp = <16>;
-	//	int_clk = <0>;
-	//	late_init = <0>;
-	//	status = "disabled";
-	//};
+//	mxcfb4: fb@3 {
+//		compatible = "fsl,mxc_sdc_fb";
+//		disp_dev = "ldb";
+//		interface_pix_fmt = "RGB666";
+//		mode_str ="LDB-XGA";
+//		default_bpp = <16>;
+//		int_clk = <0>;
+//		late_init = <0>;
+//		status = "disabled";
+//	};
 
 	v4l2_cap_0 {
 		compatible = "fsl,imx6q-v4l2-capture";
@@ -127,92 +127,89 @@
 	pinctrl-0 = <&pinctrl_hog>;
 
 	hog {
-	    pinctrl_hog: hoggrp {
-	    fsl,pins = < 
-		  /* gpio-leds */
-		  MX6QDL_PAD_EIM_D28__GPIO3_IO28      0x80000000
-	        MX6QDL_PAD_EIM_A25__GPIO5_IO02      0x80000000
-		
-//	        MX6QDL_PAD_CSI0_DAT9__GPIO5_IO27    0x80000000  /* Comparator        | J11  36 | GPIO 155 */
-              MX6QDL_PAD_CSI0_DAT9__GPIO5_IO27    0x80000000  /* PowGood           | J11  36 | GPIO 155 */
-              MX6QDL_PAD_SD4_DAT3__GPIO2_IO11     0x80000000  /* Btn_ResetSettings | J11  02 | GPIO 43 */
-	    >;
-	    };
-      };	
-		
+		pinctrl_hog: hoggrp {
+		fsl,pins = < 
+			/* gpio-leds */
+			MX6QDL_PAD_EIM_D28__GPIO3_IO28		0x80000000
+			MX6QDL_PAD_EIM_A25__GPIO5_IO02		0x80000000
+
+//		  MX6QDL_PAD_CSI0_DAT9__GPIO5_IO27		0x80000000  /* Comparator		| J11  36 | GPIO 155 */
+			MX6QDL_PAD_CSI0_DAT9__GPIO5_IO27	0x80000000  /* PowGood			| J11  36 | GPIO 155 */
+			MX6QDL_PAD_SD4_DAT3__GPIO2_IO11		0x80000000  /* Btn_ResetSets	| J11  02 | GPIO 43 */
+		>;
+		};
+	};
+
 	led {
-          pinctrl_led: ledgrp {
-          fsl,pins = <
-              MX6QDL_PAD_KEY_ROW1__GPIO4_IO09     0x80000000  /* LED_Power/Work    | J11  32 | GPIO 105 */
-              MX6QDL_PAD_CSI0_DAT8__GPIO5_IO26    0x80000000  /* LED_GPS/GPRS      | J11  38 | GPIO 154 */
-              MX6QDL_PAD_KEY_COL1__GPIO4_IO08     0x80000000  /* LED_WiFi          | J11  34 | GPIO 104 */
-              MX6QDL_PAD_CSI0_DAT6__GPIO5_IO24    0x80000000  /* LED_CAN1          | J11  29 | GPIO 152 */
-              MX6QDL_PAD_CSI0_DAT7__GPIO5_IO25    0x80000000  /* LED_CAN2          | J11  31 | GPIO 153 */
-//
-//            MX6QDL_PAD_ENET_RXD1__GPIO1_IO26    0x80000000  /* LED_MarsStatus    | J11  15 | GPIO 26 */
-//            MX6QDL_PAD_CSI0_DAT4__GPIO5_IO22    0x80000000  /* LED_CAN1          | J11  25 | GPIO 150 */
-//            MX6QDL_PAD_CSI0_DAT5__GPIO5_IO23    0x80000000  /* LED_CAN2          | J11  27 | GPIO 151 */
+		pinctrl_led: ledgrp {
+		fsl,pins = <
+			MX6QDL_PAD_KEY_ROW1__GPIO4_IO09		0x80000000  /* LED_Power/Work	| J11  32 | GPIO 105 */
+			MX6QDL_PAD_CSI0_DAT8__GPIO5_IO26	0x80000000  /* LED_GPS/GPRS		| J11  38 | GPIO 154 */
+			MX6QDL_PAD_KEY_COL1__GPIO4_IO08		0x80000000  /* LED_WiFi			| J11  34 | GPIO 104 */
+			MX6QDL_PAD_CSI0_DAT6__GPIO5_IO24	0x80000000  /* LED_CAN1			| J11  29 | GPIO 152 */
+			MX6QDL_PAD_CSI0_DAT7__GPIO5_IO25	0x80000000  /* LED_CAN2			| J11  31 | GPIO 153 */
 
+//			MX6QDL_PAD_ENET_RXD1__GPIO1_IO26	0x80000000  /* LED_MarsStatus	| J11  15 | GPIO 26 */
+//			MX6QDL_PAD_CSI0_DAT4__GPIO5_IO22	0x80000000  /* LED_CAN1			| J11  25 | GPIO 150 */
+//			MX6QDL_PAD_CSI0_DAT5__GPIO5_IO23	0x80000000  /* LED_CAN2			| J11  27 | GPIO 151 */
+		>;
+		};
+	};
+	  
+	wifi {
+		pinctrl_wifi: wifigrp {
+		fsl,pins = <
+			MX6QDL_PAD_GPIO_7__GPIO1_IO07		0x80000000  /* WiFi_Reset		| J10  29 | GPIO 7 */
+		>;
+		};
+	};
+	  
+//	gps {
+//		pinctrl_gps: gpsgrp {
+//		fsl,pins = <
+//			MX6QDL_PAD_EIM_D20__GPIO3_IO20		0x80000000  /* GPS_Status		| J11  7  | GPIO 84 */
+//			MX6QDL_PAD_EIM_D19__GPIO3_IO19		0x80000000  /* GPS_Netlight		| J11  9  | GPIO 83 */
+//			MX6QDL_PAD_SD1_CMD__GPIO1_IO18		0x80000000  /* GPS_Reset		| J10  1  | GPIO 18 */
+//			MX6QDL_PAD_EIM_EB3__GPIO2_IO31		0x80000000  /* GPS_WakeUp		| J10  35 | GPIO 63 */
+//			MX6QDL_PAD_GPIO_1__GPIO1_IO01		0x80000000  /* GPS_StandBy		| J10  39 | GPIO 1 */
+//		>;
+//		};
+//	};
+	  
+	gprs {
+		pinctrl_gprs: gprsgrp {
+		fsl,pins = <
+//			MX6QDL_PAD_CSI0_DAT8__GPIO5_IO26	0x80000000  /* GPRS_Status		| J11  38 | GPIO 154 */
+//			MX6QDL_PAD_CSI0_MCLK__GPIO5_IO19	0x80000000  /* GPRS_Netlight	| J11  15 | GPIO 147 */
+//			MX6QDL_PAD_SD4_DAT3__GPIO2_IO11		0x80000000  /* GPRS_Power		| J11  1  | GPIO 43 */
+//			MX6QDL_PAD_CSI0_DAT18__GPIO6_IO04	0x80000000  /* GPRS_WakeUp		| J11  16 | GPIO 164 */
+//			MX6QDL_PAD_CSI0_DAT19__GPIO6_IO05	0x80000000  /* GPRS_Input		| J11  18 | GPIO 165 */
+			MX6QDL_PAD_GPIO_0__GPIO1_IO00		0x80000000  /* GPRS_Power		| J10  37 | GPIO 0 */
+			MX6QDL_PAD_GPIO_1__GPIO1_IO01		0x80000000  /* GPRS_Reset		| J10  39 | GPIO 1 */
+			MX6QDL_PAD_GPIO_8__GPIO1_IO08		0x80000000  /* GPRS_FlightMode	| J10  31 | GPIO 8 */
+			MX6QDL_PAD_CSI0_DAT5__GPIO5_IO23	0x80000000  /* GPRS_Status		| J11  27 | GPIO 151 */
+		>;
+		};
+	};
 
-          >;
-          };
-      };
-      
-      wifi {
-          pinctrl_wifi: wifigrp {
-          fsl,pins = <
-              MX6QDL_PAD_GPIO_7__GPIO1_IO07       0x80000000  /* WiFi_Reset        | J10  29 | GPIO 7 */
-          >;
-          };
-      };
-      
-//    gps {
-//        pinctrl_gps: gpsgrp {
-//        fsl,pins = <
-//            MX6QDL_PAD_EIM_D20__GPIO3_IO20      0x80000000  /* GPS_Status        | J11  7  | GPIO 84 */
-//            MX6QDL_PAD_EIM_D19__GPIO3_IO19      0x80000000  /* GPS_Netlight      | J11  9  | GPIO 83 */
-//            MX6QDL_PAD_SD1_CMD__GPIO1_IO18      0x80000000  /* GPS_Reset         | J10  1  | GPIO 18 */
-//            MX6QDL_PAD_EIM_EB3__GPIO2_IO31      0x80000000  /* GPS_WakeUp        | J10  35 | GPIO 63 */
-//            MX6QDL_PAD_GPIO_1__GPIO1_IO01       0x80000000  /* GPS_StandBy       | J10  39 | GPIO 1 */
-//        >;
-//        };
-//    };
-      
-      gprs {
-          pinctrl_gprs: gprsgrp {
-          fsl,pins = <
-//            MX6QDL_PAD_CSI0_DAT8__GPIO5_IO26    0x80000000  /* GPRS_Status       | J11  38 | GPIO 154 */
-//            MX6QDL_PAD_CSI0_MCLK__GPIO5_IO19    0x80000000  /* GPRS_Netlight     | J11  15 | GPIO 147 */
-//            MX6QDL_PAD_SD4_DAT3__GPIO2_IO11     0x80000000  /* GPRS_Power        | J11  1  | GPIO 43 */
-//            MX6QDL_PAD_CSI0_DAT18__GPIO6_IO04   0x80000000  /* GPRS_WakeUp       | J11  16 | GPIO 164 */
-//            MX6QDL_PAD_CSI0_DAT19__GPIO6_IO05   0x80000000  /* GPRS_Input        | J11  18 | GPIO 165 */
-              MX6QDL_PAD_GPIO_0__GPIO1_IO00       0x80000000  /* GPRS_Power        | J10  37 | GPIO 0 */
-              MX6QDL_PAD_GPIO_1__GPIO1_IO01       0x80000000  /* GPRS_Reset        | J10  39 | GPIO 1 */
-              MX6QDL_PAD_GPIO_8__GPIO1_IO08       0x80000000  /* GPRS_FlightMode   | J10  31 | GPIO 8 */
-              MX6QDL_PAD_KEY_COL0__GPIO4_IO06     0x80000000  /* GPRS_Status       | J11  30 | GPIO 102 */
-          >;
-          };
-      };
-	
 // shared on LCD port (J12), extension header (J11), and LVDS display (J3), on-board pull-ups
-// 
-//    i2c3 {		/* for LVDS display */
-//        pinctrl_i2c3_5: i2c3grp-5 {
-//        fsl,pins = <
-//            MX6QDL_PAD_GPIO_5__I2C3_SCL 0x4001b8b1
-//            MX6QDL_PAD_GPIO_6__I2C3_SDA 0x4001b8b1
-//        >;
-//        };
-//    };
+//	i2c3 {		/* for LVDS display */
+//		pinctrl_i2c3_5: i2c3grp-5 {
+//		fsl,pins = <
+//			MX6QDL_PAD_GPIO_5__I2C3_SCL 0x4001b8b1
+//			MX6QDL_PAD_GPIO_6__I2C3_SDA 0x4001b8b1
+//		>;
+//		};
+//	};
 
 // shared on J10 and LVDS display (J3)
 //	pwm4 {
-//        pinctrl_pwm4_2: pwm4grp-2 {
-//        fsl,pins = <
-//            MX6QDL_PAD_SD1_CMD__PWM4_OUT 0x1b0b1
-//        >;
-//        };
-//    };
+//		pinctrl_pwm4_2: pwm4grp-2 {
+//		fsl,pins = <
+//			MX6QDL_PAD_SD1_CMD__PWM4_OUT 0x1b0b1
+//		>;
+//		};
+//	};
 
 };
 
@@ -312,7 +309,7 @@
 &uart3 {
 	pinctrl-names = "default";
 //	pinctrl-0 = <&pinctrl_uart3_2>;
-      pinctrl-0 = <&pinctrl_uart3_3>;
+	pinctrl-0 = <&pinctrl_uart3_3>;
 	status = "okay";
 };
 
@@ -333,9 +330,9 @@
 };
 
 &usdhc1 {
-      pinctrl-names = "default";
-      pinctrl-0 = <&pinctrl_usdhc1_1>;
-      status = "okay";
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_usdhc1_1>;
+	status = "okay";
 };
 
 // micro-SD card J13
